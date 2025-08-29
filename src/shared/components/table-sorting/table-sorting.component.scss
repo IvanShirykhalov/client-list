@@ -1,0 +1,16 @@
+.sorting-container {
+  display: inline-flex;
+  flex-direction: column;
+  cursor: pointer;
+  margin-left: 0.25rem;
+  gap: 0.125rem;
+}
+
+.sort-arrow {
+  fill: var(--secondary-color);
+  transition: fill 0.2s ease;
+
+  &.active {
+    fill: var(--primary-color);
+  }
+}

@@ -1,0 +1,14 @@
+<div class="custom-input" [class.disabled]="disabled">
+  @if (label) {
+    <label>{{ label }}</label>
+  }
+  <input
+    [type]="type"
+    [value]="value"
+    [disabled]="disabled"
+    (input)="onInput($event)"
+    (blur)="onInputBlur()"
+    [placeholder]="placeholder"
+    [attr.required]="required ? '' : null"
+  />
+</div>

@@ -1,0 +1,30 @@
+.language-switcher {
+  display: flex;
+}
+
+.lang-btn {
+  padding: 0.5rem 0.75rem;
+  border: 0.0625rem solid #ccc;
+  background: var(--bg-tertiary);
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lang-btn:hover {
+  background: #f8f9fa;
+}
+
+.flag-icon {
+  width: 1.25rem;
+  height: 0.9375rem;
+  object-fit: cover;
+}
+
+.lang-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+}

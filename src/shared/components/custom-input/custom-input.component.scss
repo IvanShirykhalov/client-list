@@ -1,0 +1,44 @@
+.custom-input {
+  margin-bottom: var(--space-4);
+
+  label {
+    display: block;
+    margin-bottom: var(--space-2);
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+
+  input {
+    width: 100%;
+    padding: var(--space-3);
+    border: 0.0625rem solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 0.1875rem rgba(59, 130, 246, 0.1);
+    }
+
+    &:disabled {
+      background-color: var(--bg-tertiary);
+      cursor: not-allowed;
+      color: var(--text-tertiary);
+    }
+
+    &::placeholder {
+      color: var(--text-tertiary);
+    }
+  }
+
+  &.disabled {
+    opacity: 0.6;
+
+    label {
+      cursor: not-allowed;
+    }
+  }
+}

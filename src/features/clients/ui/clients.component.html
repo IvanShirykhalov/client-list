@@ -1,0 +1,238 @@
+<div class="clients-container">
+  <div class="header">
+    <h2>{{ 'APP.CLIENTS' | translate }}</h2>
+    <button (click)="openCreateModal()" class="btn btn-primary">
+      {{ 'APP.ADD_CLIENT' | translate }}
+    </button>
+  </div>
+
+  <div class="filters">
+    <div class="search-input-container">
+      <input
+        type="text"
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)"
+        (keyup.enter)="onSearch()"
+        (keyup)="searchError.set('')"
+        [placeholder]="'APP.SEARCH_PLACEHOLDER' | translate"
+        class="search-input"
+      />
+      @if (searchTerm()) {
+        <span
+          class="clear-icon"
+          (click)="clearSearch()"
+        >
+        х
+      </span>
+      }
+
+    </div>
+    <button class="btn" (click)="onSearch()">{{ 'APP.SEARCH' | translate }}</button>
+  </div>
+
+  @if (searchError()) {
+    <div class="error-message">
+      {{ searchError() }}
+    </div>
+  }
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+      <tr>
+        <th>
+          <div class="header-cell">
+            <span>{{ 'TABLE.FIO' | translate }}</span>
+            <app-table-sorting
+              [direction]="getSortDirection('fio')"
+              (sortEvent)="onSort('fio', $event)">
+            </app-table-sorting>
+          </div>
+        </th>
+        <th>
+          <div class="header-cell">
+            <span>{{ 'TABLE.PHONE' | translate }}</span>
+            <app-table-sorting
+              [direction]="getSortDirection('phone')"
+              (sortEvent)="onSort('phone', $event)">
+            </app-table-sorting>
+          </div>
+        </th>
+        <th>
+          <div class="header-cell">
+            <span>{{ 'TABLE.EMAIL' | translate }}</span>
+            <app-table-sorting
+              [direction]="getSortDirection('email')"
+              (sortEvent)="onSort('email', $event)">
+            </app-table-sorting>
+          </div>
+        </th>
+        <th>
+          <div class="header-cell">
+            <span>{{ 'TABLE.CITY' | translate }}</span>
+            <app-table-sorting
+              [direction]="getSortDirection('city')"
+              (sortEvent)="onSort('city', $event)">
+            </app-table-sorting>
+          </div>
+        </th>
+        <th>
+          <div class="header-cell">
+            <span>{{ 'TABLE.BIRTHDAY' | translate }}</span>
+            <app-table-sorting
+              [direction]="getSortDirection('birthday')"
+              (sortEvent)="onSort('birthday', $event)">
+            </app-table-sorting>
+          </div>
+        </th>
+        <th>
+          <div class="header-cell">
+            <span>{{ 'TABLE.GENDER' | translate }}</span>
+            <app-table-sorting
+              [direction]="getSortDirection('gender')"
+              (sortEvent)="onSort('gender', $event)">
+            </app-table-sorting>
+          </div>
+        </th>
+        <th>
+          <div class="header-cell">
+            <span>{{ 'TABLE.CAR_NUMBER' | translate }}</span>
+            <app-table-sorting
+              [direction]="getSortDirection('car_number')"
+              (sortEvent)="onSort('car_number', $event)">
+            </app-table-sorting>
+          </div>
+        </th>
+        <th>
+          <div class="header-cell">
+            <span>{{ 'TABLE.BONUS' | translate }}</span>
+            <app-table-sorting
+              [direction]="getSortDirection('bonus')"
+              (sortEvent)="onSort('bonus', $event)">
+            </app-table-sorting>
+          </div>
+        </th>
+        <th>
+          <div class="header-cell">
+            <span>{{ 'TABLE.DISCOUNT' | translate }}</span>
+            <app-table-sorting
+              [direction]="getSortDirection('discount')"
+              (sortEvent)="onSort('discount', $event)">
+            </app-table-sorting>
+          </div>
+        </th>
+        <th>
+          <div class="header-cell">
+            <span>{{ 'TABLE.LOYALTY_LEVEL' | translate }}</span>
+            <app-table-sorting
+              [direction]="getSortDirection('loyalty_level')"
+              (sortEvent)="onSort('loyalty_level', $event)">
+            </app-table-sorting>
+          </div>
+        </th>
+        <th>
+          <div class="header-cell">
+            <span>{{ 'TABLE.TOTAL_AMOUNT' | translate }}</span>
+            <app-table-sorting
+              [direction]="getSortDirection('summ_all')"
+              (sortEvent)="onSort('summ_all', $event)">
+            </app-table-sorting>
+          </div>
+        </th>
+        <th>
+          <div class="header-cell">
+            <span>{{ 'TABLE.VISITS' | translate }}</span>
+            <app-table-sorting
+              [direction]="getSortDirection('visits_all')"
+              (sortEvent)="onSort('visits_all', $event)">
+            </app-table-sorting>
+          </div>
+        </th>
+        <th>
+          <div class="header-cell">
+            <span>{{ 'TABLE.LAST_VISIT' | translate }}</span>
+            <app-table-sorting
+              [direction]="getSortDirection('date_last')"
+              (sortEvent)="onSort('date_last', $event)">
+            </app-table-sorting>
+          </div>
+        </th>
+        <th>
+          <div class="header-cell">
+            <span>{{ 'TABLE.CREATED_AT' | translate }}</span>
+            <app-table-sorting
+              [direction]="getSortDirection('created_at')"
+              (sortEvent)="onSort('created_at', $event)">
+            </app-table-sorting>
+          </div>
+        </th>
+        <th>
+          <div class="header-cell">
+            <span>{{ 'APP.ACTIONS' | translate }}</span>
+          </div>
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (client of filteredClients(); track client.user_id) {
+          <tr>
+            <td appEmptyCell [title]="client.fio ">{{ client.fio }}</td>
+            <td appEmptyCell>{{ client.phone }}</td>
+            <td appEmptyCell [title]="client.email">{{ client.email }}</td>
+            <td appEmptyCell>{{ client.city }}</td>
+            <td appEmptyCell>{{ client.birthday }}</td>
+            <td appEmptyCell>{{ client.gender }}</td>
+            <td appEmptyCell>{{ client.car_number }}</td>
+            <td appEmptyCell>{{ client.bonus }}</td>
+            <td appEmptyCell>{{ client.discount }}</td>
+            <td appEmptyCell>{{ client.loyalty_level }}</td>
+            <td appEmptyCell>{{ client.summ_all }}</td>
+            <td appEmptyCell>{{ client.visits_all }}</td>
+            <td appEmptyCell>{{ client.date_last }}</td>
+            <td appEmptyCell>{{ client.created_at | date:'dd.MM.yyyy' }}</td>
+            <td>
+              <button (click)="openPushModal([client.user_id])" class="btn btn-primary">
+                {{ 'APP.PUSH' | translate }}
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="15" class="no-data">{{ 'APP.NO_CLIENTS' | translate }}</td>
+          </tr>
+        }
+        @if (isLoading()) {
+          <tr>
+            <td colspan="15" class="loading-row">
+              <div class="loader"></div>
+              {{ 'APP.LOADING' | translate }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (showCreateModal()) {
+    <div class="modal-overlay" (click)="onCloseCreateModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <app-create-client
+          (onClientCreated)="onClientCreated($event)"
+          (onClose)="onCloseCreateModal()">
+        </app-create-client>
+      </div>
+    </div>
+  }
+
+  @if (showPushModal()) {
+    <div class="modal-overlay" (click)="onClosePushModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <app-push-modal
+          [recipientName]="selectedClientFio()"
+          (onSend)="onSendPush($event)"
+          (onClose)="onClosePushModal()">
+        </app-push-modal>
+      </div>
+    </div>
+  }
+</div>

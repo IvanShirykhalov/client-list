@@ -1,0 +1,14 @@
+<div class="language-switcher">
+  <button
+    (click)="toggleLanguage()"
+    class="lang-btn"
+    [title]="currentLang === 'ru' ? 'Переключить на Английский' : 'Switch to Russian'"
+  >
+    <img
+      [src]="currentLang === 'ru' ? 'assets/flags/ru.svg' : 'assets/flags/us.svg'"
+      [alt]="currentLang === 'ru' ? 'RU' : 'EN'"
+      class="flag-icon"
+    />
+    <span class="lang-text">{{ currentLang === 'ru' ? 'RU' : 'EN' }}</span>
+  </button>
+</div>

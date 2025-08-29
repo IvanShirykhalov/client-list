@@ -1,0 +1,36 @@
+<div class="login-container">
+  <div class="login-form">
+    <h2>{{ 'LOGIN.TITLE' | translate }}</h2>
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+      <div class="form-group">
+        <label>{{ 'LOGIN.USERNAME' | translate }}:</label>
+        <input
+          type="text"
+          [(ngModel)]="login"
+          name="login"
+          required
+          [placeholder]="'LOGIN.USERNAME_PLACEHOLDER' | translate"
+        />
+      </div>
+      <div class="form-group">
+        <label>{{ 'LOGIN.PASSWORD' | translate }}:</label>
+        <input
+          type="password"
+          [(ngModel)]="password"
+          name="password"
+          required
+          [placeholder]="'LOGIN.PASSWORD_PLACEHOLDER' | translate"
+        />
+      </div>
+      <button type="submit" [disabled]="loading">
+        {{ loading ? ('LOGIN.SUBMITTING' | translate) : ('LOGIN.SUBMIT' | translate) }}
+      </button>
+      @if (error) {
+        <div class="error">{{ error }}</div>
+      }
+    </form>
+    <div class="language-switcher-container">
+      <app-language-switcher></app-language-switcher>
+    </div>
+  </div>
+</div>

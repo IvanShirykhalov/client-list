@@ -1,0 +1,8 @@
+<div class="sorting-container" (click)="changeSortDirection()">
+  <svg class="sort-arrow up" [class.active]="arrowState().up" width="12" height="12" viewBox="0 0 12 12">
+    <path d="M6 3L2 7H10L6 3Z" />
+  </svg>
+  <svg class="sort-arrow down" [class.active]="arrowState().down" width="12" height="12" viewBox="0 0 12 12">
+    <path d="M6 9L2 5H10L6 9Z" />
+  </svg>
+</div>
