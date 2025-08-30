@@ -3,7 +3,8 @@ import {
   DestroyRef,
   inject,
   input,
-  InputSignal, OnInit,
+  InputSignal,
+  OnInit,
   output,
   OutputEmitterRef,
   signal,
@@ -16,7 +17,9 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
-import { IClient, ApiService, CustomInputComponent, ClientDetailsMode } from '../../../../shared';
+import { ClientDetailsMode, CustomInputComponent, IClient } from '../../../../shared';
+import { ClientsRepository } from '../../data';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Компонент для создания и редактирования клиента
@@ -62,7 +65,7 @@ export class ClientDetailsComponent implements OnInit {
   public successMessage: WritableSignal<string> = signal('');
   public activeTab: WritableSignal<string> = signal('basic');
 
-  private apiService: ApiService = inject(ApiService);
+  private clientsRepository: ClientsRepository = inject(ClientsRepository);
   private destroyRef: DestroyRef = inject(DestroyRef);
   private translate: TranslateService = inject(TranslateService);
   private router: Router = inject(Router);
@@ -89,8 +92,8 @@ export class ClientDetailsComponent implements OnInit {
     const clientData: Partial<IClient> = this.prepareClientData();
 
     const operation: Observable<IClient> = this.mode() === ClientDetailsMode.CREATE
-      ? this.apiService.createClient(clientData)
-      : this.apiService.updateClient(this.clientId()!, clientData);
+      ? this.clientsRepository.createClient(clientData)
+      : this.clientsRepository.updateClient(this.clientId()!, clientData);
 
     operation
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -115,13 +118,12 @@ export class ClientDetailsComponent implements OnInit {
     this.deleting.set(true);
     this.errorMessage.set('');
 
-    this.apiService.deleteClient(this.clientId()!)
+    this.clientsRepository.deleteClient(this.clientId()!)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.onClientDeleted.emit(this.clientId()!);
           this.successMessage.set(this.translate.instant('CLIENT_DETAILS.DELETE_SUCCESS'));
-          setTimeout(() => this.close(), 2000);
         },
         error: (error) => {
           this.errorMessage.set(this.translate.instant('ERRORS.DELETE_ERROR'));
@@ -280,7 +282,7 @@ export class ClientDetailsComponent implements OnInit {
   /**
    * Обработка ошибки сохранения
    */
-  private handleSaveError(error: any): void {
+  private handleSaveError(error: HttpErrorResponse): void {
     this.saving.set(false);
 
     let errorMessage: string = this.translate.instant('ERRORS.SAVE_ERROR');

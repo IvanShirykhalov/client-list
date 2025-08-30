@@ -10,11 +10,6 @@ import { LoginResponse } from '../models';
 export class AuthService {
   private readonly authTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
-  /**
-   * Создает экземпляр AuthService
-   *
-   * @param http - HttpClient для выполнения HTTP запросов
-   */
   constructor(private readonly http: HttpClient) {
     const savedToken: string | null = localStorage.getItem('authToken');
     if (savedToken) {

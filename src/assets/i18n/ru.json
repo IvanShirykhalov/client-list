@@ -19,6 +19,8 @@
     "DELETING": "Удаление..."
   },
   "CLIENT_DETAILS": {
+    "TITLE_CREATE": "Создание клиента",
+    "TITLE_EDIT": "Редактирование клиента",
     "BASIC_DATA": "Основные данные",
     "ADDITIONAL_DATA": "Дополнительные данные",
     "FIO_LABEL": "ФИО *",
@@ -55,7 +57,14 @@
     "KEY5_LABEL": "Доп. ключ 5",
     "KEY5_PLACEHOLDER": "Ключ 5",
     "KEY6_LABEL": "Доп. ключ 6",
-    "KEY6_PLACEHOLDER": "Ключ 6"
+    "KEY6_PLACEHOLDER": "Ключ 6",
+    "DELETE_CONFIRM": "Вы уверены, что хотите удалить этого клиента?",
+    "DELETE_SUCCESS": "Клиент успешно удален",
+    "CREATE_SUCCESS": "Клиент успешно создан",
+    "UPDATE_SUCCESS": "Клиент успешно обновлен",
+    "REQUIRED_FIO_ERROR": "ФИО обязательно для заполнения",
+    "INVALID_PHONE_ERROR": "Неверный формат номера телефона",
+    "INVALID_EMAIL_ERROR": "Неверный формат email"
   },
   "LOGIN": {
     "TITLE": "Вход в личный кабинет",
@@ -136,6 +145,10 @@
     "SUCCESS": "Клиент \"{name}\" успешно создан!"
   },
   "ERRORS": {
+    "SAVE_ERROR": "Ошибка сохранения данных клиента",
+    "VALIDATION_ERROR": "Ошибка валидации данных",
+    "AUTH_ERROR": "Ошибка авторизации",
+    "DELETE_ERROR": "Ошибка удаления клиента",
     "SEARCH_ERROR": "Ошибка загрузки данных",
     "SEARCH_MIN_LENGTH": "Введите данные для поиска",
     "CLIENT_NOT_FOUND": "Клиент с ID {id} не найден",

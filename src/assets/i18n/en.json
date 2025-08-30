@@ -19,6 +19,8 @@
     "DELETING": "Deleting..."
   },
   "CLIENT_DETAILS": {
+    "TITLE_CREATE": "Create client",
+    "TITLE_EDIT": "Edit client",
     "BASIC_DATA": "Basic data",
     "ADDITIONAL_DATA": "Additional data",
     "FIO_LABEL": "Full Name *",
@@ -55,7 +57,14 @@
     "KEY5_LABEL": "Additional key 5",
     "KEY5_PLACEHOLDER": "Key 5",
     "KEY6_LABEL": "Additional key 6",
-    "KEY6_PLACEHOLDER": "Key 6"
+    "KEY6_PLACEHOLDER": "Key 6",
+    "DELETE_CONFIRM": "Are you sure you want to delete this client?",
+    "DELETE_SUCCESS": "Client successfully deleted",
+    "CREATE_SUCCESS": "Client successfully created",
+    "UPDATE_SUCCESS": "Client successfully updated",
+    "REQUIRED_FIO_ERROR": "Full name is required",
+    "INVALID_PHONE_ERROR": "Invalid phone number format",
+    "INVALID_EMAIL_ERROR": "Invalid email format"
   },
   "LOGIN": {
     "TITLE": "Login to personal account",
@@ -136,6 +145,10 @@
     "SUCCESS": "Client \"{name}\" created successfully!"
   },
   "ERRORS": {
+    "SAVE_ERROR": "Error saving client data",
+    "VALIDATION_ERROR": "Data validation error",
+    "AUTH_ERROR": "Authentication error",
+    "DELETE_ERROR": "Error deleting client",
     "SEARCH_ERROR": "Data loading error",
     "SEARCH_MIN_LENGTH": "Enter search data",
     "CLIENT_NOT_FOUND": "Client with ID {id} not found",

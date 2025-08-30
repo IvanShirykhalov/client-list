@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, tap, catchError, of } from 'rxjs';
 
-import { ApiService, IClient, ClientDetailsMode, IClientsResponse, TableSortDirectionType } from '../../../shared';
+import { IClient, ClientDetailsMode, IClientsResponse, TableSortDirectionType } from '../../../shared';
+import { ClientsRepository } from '../data';
 
 /**
  * Фасад таблицы клиентов
@@ -55,7 +56,7 @@ export class ClientsFacade {
     });
   });
 
-  private apiService: ApiService = inject(ApiService);
+  private clientsRepository: ClientsRepository = inject(ClientsRepository);
   private router: Router = inject(Router);
   private destroyRef: DestroyRef = inject(DestroyRef);
   private translate: TranslateService = inject(TranslateService);
@@ -74,7 +75,7 @@ export class ClientsFacade {
     this.isLoading.set(true);
     this.searchError.set('');
 
-    return this.apiService.getClients(this.searchTerm()).pipe(
+    return this.clientsRepository.getClients(this.searchTerm()).pipe(
       takeUntilDestroyed(this.destroyRef),
       tap({
         next: (response: IClientsResponse) => {
@@ -183,7 +184,7 @@ export class ClientsFacade {
    * Обновление данных клиента в списке
    *
    * @param updatedClient - обновленный клиент
-  */
+   */
   public updateClient(updatedClient: IClient): void {
     this.clients.update((clients: IClient[]): IClient[] =>
       clients.map((client: IClient): IClient =>
@@ -248,7 +249,7 @@ export class ClientsFacade {
       throw new Error(this.translate.instant('ERRORS.EMPTY_MESSAGE'));
     }
 
-    return this.apiService.sendPush(this.selectedClientIds(), message).pipe(
+    return this.clientsRepository.sendPush(this.selectedClientIds(), message).pipe(
       takeUntilDestroyed(this.destroyRef)
     );
   }

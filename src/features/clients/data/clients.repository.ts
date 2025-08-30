@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AuthService } from './auth.service';
-import { IClient, IClientsResponse } from '../models';
+
+import { AuthService, IClient, IClientsResponse } from '../../../shared';
 
 /**
- * Сервис для работы с АПИ Teyca
+ * Репозиторий клиентов
  */
 @Injectable({ providedIn: 'root' })
-export class ApiService {
+export class ClientsRepository {
   private readonly baseUrl: string = 'https://api.teyca.ru/v1';
 
   constructor(
@@ -44,7 +44,7 @@ export class ApiService {
         headers: this.getHeaders()
       }
     ).pipe(
-      catchError((error: any) => {
+      catchError((error: HttpErrorResponse) => {
         console.error('API Error:', error);
         if (error.status === 400) {
           return of({
@@ -103,10 +103,10 @@ export class ApiService {
   /**
    * Удаляет клиента
    */
-  public deleteClient(userId: number): Observable<any> {
+  public deleteClient(userId: number): Observable<void> {
     const token: string = this.getToken();
 
-    return this.http.delete(
+    return this.http.delete<void>(
       `${this.baseUrl}/${token}/passes/${userId}`,
       { headers: this.getHeaders() }
     ).pipe(
@@ -140,10 +140,10 @@ export class ApiService {
    * @param userIds - массив идентификаторов пользователей
    * @param message - текст сообщения для отправки
    */
-  public sendPush(userIds: number[], message: string): Observable<any> {
+  public sendPush(userIds: number[], message: string): Observable<{ success: boolean; message?: string }> {
     const token: string = this.getToken();
 
-    return this.http.post(
+    return this.http.post<{ success: boolean; message?: string }>(
       `${this.baseUrl}/${token}/message/push`,
       {
         user_id: userIds.join(','),
@@ -155,7 +155,7 @@ export class ApiService {
     ).pipe(
       catchError((error: HttpErrorResponse) => {
         console.error('Send push failed:', error);
-        throw error;
+        return throwError(() => error);
       })
     );
   }
@@ -163,12 +163,12 @@ export class ApiService {
   /**
    * Подготавливает данные клиента для API
    */
-  private prepareClientData(clientData: Partial<IClient>): any {
+  private prepareClientData(clientData: Partial<IClient>): Partial<IClient> {
     const { fio, first_name, last_name, pat_name, ...rest } = clientData;
 
     let firstName: string | undefined = first_name;
-    let lastName: string | undefined  = last_name;
-    let patronymic: string | undefined  = pat_name;
+    let lastName: string | undefined = last_name;
+    let patronymic: string | undefined = pat_name;
 
     if (fio && !first_name) {
       const fioParts: string[] = fio.split(' ');
@@ -190,7 +190,7 @@ export class ApiService {
       gender: clientData.gender,
       barcode: clientData.barcode,
       discount: clientData.discount,
-      bonus: clientData.bonus ? Number(clientData.bonus) : undefined,
+      bonus: clientData.bonus,
       loyalty_level: clientData.loyalty_level,
       city: clientData.city,
       car_number: clientData.car_number,
