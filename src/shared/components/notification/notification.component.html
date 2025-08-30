@@ -1,0 +1,17 @@
+<div class="notification-container">
+  @for (notification of notifications; track notification.id) {
+    <div
+      class="notification"
+    >
+      <div class="notification-content">
+        <div class="notification-message">{{ notification.message }}</div>
+      </div>
+      <button
+        class="notification-close"
+        (click)="removeNotification(notification.id)"
+      >
+        ×
+      </button>
+    </div>
+  }
+</div>

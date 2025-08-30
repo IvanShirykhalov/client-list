@@ -269,14 +269,11 @@ export class ClientDetailsComponent implements OnInit {
       this.successMessage.set(this.translate.instant('CLIENT_DETAILS.UPDATE_SUCCESS'));
     }
 
-    // Автоматическое закрытие через 2 секунды
-    setTimeout(() => {
-      if (this.mode() === ClientDetailsMode.CREATE) {
-        this.resetForm();
-      } else {
-        this.close();
-      }
-    }, 2000);
+    if (this.mode() === ClientDetailsMode.CREATE) {
+      this.resetForm();
+    } else {
+      this.close();
+    }
   }
 
   /**

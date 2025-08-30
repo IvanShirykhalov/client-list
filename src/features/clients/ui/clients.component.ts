@@ -1,4 +1,4 @@
-import { Component, OnInit, Signal, WritableSignal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, Signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -15,6 +15,8 @@ import {
 } from '../../../shared';
 import { ClientsFacade } from '../core';
 import { ClientDetailsComponent } from './client-details';
+import { NotificationService } from '../../../shared/services/notification.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Компонент со списком клиентов
@@ -36,10 +38,13 @@ import { ClientDetailsComponent } from './client-details';
   standalone: true,
 })
 export class ClientsComponent implements OnInit {
+  private destroyRef: DestroyRef = inject(DestroyRef);
+
   constructor(
     private route: ActivatedRoute,
     private translate: TranslateService,
-    private facade: ClientsFacade
+    private facade: ClientsFacade,
+    private notificationService: NotificationService,
   ) {
   }
 
@@ -90,7 +95,7 @@ export class ClientsComponent implements OnInit {
     this.facade.loadClients().subscribe();
 
     this.route.params
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(params => {
         const clientId: string | undefined = params['id'];
         if (clientId) {
@@ -136,13 +141,15 @@ export class ClientsComponent implements OnInit {
    */
   public onSendPush(event: { message: string }): void {
     this.facade.sendPush(event.message).subscribe({
-      next: (response) => {
-        alert(this.translate.instant('PUSH_MODAL.SUCCESS', { count: response.users_count }));
+      next: (): void => {
+        const message: string = this.translate.instant('PUSH_MODAL.SUCCESS');
+        this.notificationService.showMessage(message);
         this.onClosePushModal();
       },
-      error: (error) => {
+      error: (error: HttpErrorResponse): void => {
         console.error('Error sending push:', error);
-        alert(error.message || this.translate.instant('ERRORS.SEND_PUSH_ERROR'));
+        const message: string = this.translate.instant('ERRORS.SEND_PUSH_ERROR');
+        this.notificationService.showMessage(error.message || message);
       }
     });
   }
@@ -181,7 +188,7 @@ export class ClientsComponent implements OnInit {
    */
   public onClientCreated(newClient: IClient): void {
     this.facade.addClient(newClient);
-    alert(this.translate.instant('CLIENT_DETAILS.CREATE_SUCCESS', { name: newClient.fio }));
+    this.notificationService.showMessage(this.translate.instant('CLIENT_DETAILS.CREATE_SUCCESS', { name: newClient.fio }));
   }
 
   /**
@@ -189,7 +196,7 @@ export class ClientsComponent implements OnInit {
    */
   public onClientUpdated(updatedClient: IClient): void {
     this.facade.updateClient(updatedClient);
-    alert(this.translate.instant('CLIENT_DETAILS.UPDATE_SUCCESS', { name: updatedClient.fio }));
+    this.notificationService.showMessage(this.translate.instant('CLIENT_DETAILS.UPDATE_SUCCESS', { name: updatedClient.fio }));
   }
 
   /**
@@ -197,7 +204,7 @@ export class ClientsComponent implements OnInit {
    */
   public onClientDeleted(clientId: number): void {
     this.facade.removeClient(clientId);
-    alert(this.translate.instant('CLIENT_DETAILS.DELETE_SUCCESS'));
+    this.notificationService.showMessage(this.translate.instant('CLIENT_DETAILS.DELETE_SUCCESS'));
   }
 
   /**

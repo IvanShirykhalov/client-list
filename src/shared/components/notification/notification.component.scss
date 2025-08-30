@@ -1,0 +1,45 @@
+.notification-container {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  max-width: 21.875rem;
+}
+
+.notification {
+  display: flex;
+  align-items: center;
+  padding: 0.9375rem 1.25rem;
+  border-radius: 0.5rem;
+  background-color: var(--primary-color);
+  color: var(--text-white);
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.15);
+  border-left: 0.25rem solid var(--primary-color);
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-message {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.notification-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.125rem;
+  cursor: pointer;
+  margin-left: 0.625rem;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 1;
+  }
+}
