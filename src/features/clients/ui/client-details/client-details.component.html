@@ -1,0 +1,251 @@
+<div class="client-details-modal">
+  <div class="modal-header">
+    <h3>{{ getTitle() | translate }}</h3>
+    <button class="close-btn" (click)="close()" [disabled]="saving() || deleting()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M13 1L1 13M1 1L13 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    @if (loading()) {
+      <div class="loading-overlay">
+        <div class="loader"></div>
+        {{ 'APP.LOADING' | translate }}
+      </div>
+    }
+
+    @if (errorMessage()) {
+      <div class="error-message">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    @if (successMessage()) {
+      <div class="success-message">
+        {{ successMessage() }}
+      </div>
+    }
+
+    <div class="tabs">
+      <button
+        [class.active]="activeTab() === 'basic'"
+        (click)="setActiveTab('basic')"
+        class="tab-btn"
+        [disabled]="loading()">
+        {{ 'CLIENT_DETAILS.BASIC_DATA' | translate }}
+      </button>
+      <button
+        [class.active]="activeTab() === 'additional'"
+        (click)="setActiveTab('additional')"
+        class="tab-btn"
+        [disabled]="loading()">
+        {{ 'CLIENT_DETAILS.ADDITIONAL_DATA' | translate }}
+      </button>
+    </div>
+
+    <form (ngSubmit)="saveClient()">
+      @if (activeTab() === 'basic') {
+        <div class="tab-content">
+          <div class="form-row">
+            <app-custom-input
+              [label]="'CLIENT_DETAILS.FIO_LABEL' | translate"
+              type="text"
+              [(ngModel)]="fio"
+              name="fio"
+              [required]="true"
+              [disabled]="loading()"
+              [placeholder]="'CLIENT_DETAILS.FIO_PLACEHOLDER' | translate">
+            </app-custom-input>
+
+            <app-custom-input
+              [label]="'CLIENT_DETAILS.PHONE_LABEL' | translate"
+              type="tel"
+              [(ngModel)]="phone"
+              name="phone"
+              [disabled]="loading()"
+              [placeholder]="'CLIENT_DETAILS.PHONE_PLACEHOLDER' | translate">
+            </app-custom-input>
+          </div>
+
+          <div class="form-row">
+            <app-custom-input
+              [label]="'CLIENT_DETAILS.EMAIL_LABEL' | translate"
+              type="email"
+              [(ngModel)]="email"
+              name="email"
+              [disabled]="loading()"
+              [placeholder]="'CLIENT_DETAILS.EMAIL_PLACEHOLDER' | translate">
+            </app-custom-input>
+
+            <app-custom-input
+              [label]="'CLIENT_DETAILS.CITY_LABEL' | translate"
+              type="text"
+              [(ngModel)]="city"
+              name="city"
+              [disabled]="loading()"
+              [placeholder]="'CLIENT_DETAILS.CITY_PLACEHOLDER' | translate">
+            </app-custom-input>
+          </div>
+
+          <div class="form-row">
+            <app-custom-input
+              [label]="'CLIENT_DETAILS.BIRTHDAY_LABEL' | translate"
+              type="date"
+              [(ngModel)]="birthday"
+              name="birthday"
+              [disabled]="loading()">
+            </app-custom-input>
+
+            <div class="form-group">
+              <label>{{ 'CLIENT_DETAILS.GENDER.LABEL' | translate }}</label>
+              <select
+                [(ngModel)]="gender"
+                name="gender"
+                class="form-control"
+                [disabled]="loading()">
+                <option value="">{{ 'CLIENT_DETAILS.GENDER.NOT_SPECIFIED' | translate }}</option>
+                <option value="male">{{ 'CLIENT_DETAILS.GENDER.MALE' | translate }}</option>
+                <option value="female">{{ 'CLIENT_DETAILS.GENDER.FEMALE' | translate }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <app-custom-input
+              [label]="'CLIENT_DETAILS.CAR_NUMBER_LABEL' | translate"
+              type="text"
+              [(ngModel)]="carNumber"
+              name="carNumber"
+              [disabled]="loading()"
+              [placeholder]="'CLIENT_DETAILS.CAR_NUMBER_PLACEHOLDER' | translate">
+            </app-custom-input>
+
+            <app-custom-input
+              [label]="'CLIENT_DETAILS.TEMPLATE_LABEL' | translate"
+              type="text"
+              [(ngModel)]="template"
+              name="template"
+              [disabled]="true"
+              [placeholder]="'CLIENT_DETAILS.TEMPLATE_PLACEHOLDER' | translate">
+            </app-custom-input>
+          </div>
+        </div>
+      }
+      @if (activeTab() === 'additional') {
+        <div class="tab-content">
+          <div class="form-row">
+            <app-custom-input
+              [label]="'CLIENT_DETAILS.DISCOUNT_LABEL' | translate"
+              type="number"
+              [(ngModel)]="discount"
+              name="discount"
+              [disabled]="loading()"
+              [placeholder]="'CLIENT_DETAILS.DISCOUNT_PLACEHOLDER' | translate">
+            </app-custom-input>
+
+            <app-custom-input
+              [label]="'CLIENT_DETAILS.BONUS_LABEL' | translate"
+              type="number"
+              [(ngModel)]="bonus"
+              name="bonus"
+              [disabled]="loading()"
+              [placeholder]="'CLIENT_DETAILS.BONUS_PLACEHOLDER' | translate">
+            </app-custom-input>
+          </div>
+
+          <div class="form-row">
+            <app-custom-input
+              [label]="'CLIENT_DETAILS.LOYALTY_LEVEL_LABEL' | translate"
+              type="text"
+              [(ngModel)]="loyaltyLevel"
+              name="loyaltyLevel"
+              [disabled]="loading()"
+              [placeholder]="'CLIENT_DETAILS.LOYALTY_LEVEL_PLACEHOLDER' | translate">
+            </app-custom-input>
+
+            <app-custom-input
+              [label]="'CLIENT_DETAILS.BARCODE_LABEL' | translate"
+              type="text"
+              [(ngModel)]="barcode"
+              name="barcode"
+              [disabled]="loading()"
+              [placeholder]="'CLIENT_DETAILS.BARCODE_PLACEHOLDER' | translate">
+            </app-custom-input>
+          </div>
+
+          <div class="form-row">
+            <app-custom-input
+              [label]="'CLIENT_DETAILS.KEY3_LABEL' | translate"
+              type="text"
+              [(ngModel)]="key3"
+              name="key3"
+              [disabled]="loading()"
+              [placeholder]="'CLIENT_DETAILS.KEY3_PLACEHOLDER' | translate">
+            </app-custom-input>
+
+            <app-custom-input
+              [label]="'CLIENT_DETAILS.KEY4_LABEL' | translate"
+              type="text"
+              [(ngModel)]="key4"
+              name="key4"
+              [disabled]="loading()"
+              [placeholder]="'CLIENT_DETAILS.KEY4_PLACEHOLDER' | translate">
+            </app-custom-input>
+          </div>
+
+          <div class="form-row">
+            <app-custom-input
+              [label]="'CLIENT_DETAILS.KEY5_LABEL' | translate"
+              type="text"
+              [(ngModel)]="key5"
+              name="key5"
+              [disabled]="loading()"
+              [placeholder]="'CLIENT_DETAILS.KEY5_PLACEHOLDER' | translate">
+            </app-custom-input>
+
+            <app-custom-input
+              [label]="'CLIENT_DETAILS.KEY6_LABEL' | translate"
+              type="text"
+              [(ngModel)]="key6"
+              name="key6"
+              [disabled]="loading()"
+              [placeholder]="'CLIENT_DETAILS.KEY6_PLACEHOLDER' | translate">
+            </app-custom-input>
+          </div>
+        </div>
+      }
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <div class="footer-buttons">
+      @if (mode() === 'edit') {
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="deleteClient()"
+          [disabled]="deleting() || loading()">
+          {{ deleting() ? ('APP.DELETING' | translate) : ('APP.DELETE' | translate) }}
+        </button>
+      }
+
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="close()"
+        [disabled]="saving() || deleting()">
+        {{ 'APP.CANCEL' | translate }}
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="saveClient()"
+        [disabled]="saving() || deleting() || loading() || !fio">
+        {{ saving() ? ('APP.SAVING' | translate) : ('APP.SAVE' | translate) }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -175,7 +175,7 @@
       </thead>
       <tbody>
         @for (client of filteredClients(); track client.user_id) {
-          <tr>
+          <tr (dblclick)="openEditModal(client)">
             <td appEmptyCell [title]="client.fio ">{{ client.fio }}</td>
             <td appEmptyCell>{{ client.phone }}</td>
             <td appEmptyCell [title]="client.email">{{ client.email }}</td>
@@ -191,9 +191,11 @@
             <td appEmptyCell>{{ client.date_last }}</td>
             <td appEmptyCell>{{ client.created_at | date:'dd.MM.yyyy' }}</td>
             <td>
-              <button (click)="openPushModal([client.user_id])" class="btn btn-primary">
-                {{ 'APP.PUSH' | translate }}
-              </button>
+              <div class="action-buttons">
+                <button (click)="openPushModal([client.user_id])" class="btn btn-primary btn-sm">
+                  {{ 'APP.PUSH' | translate }}
+                </button>
+              </div>
             </td>
           </tr>
         } @empty {
@@ -213,13 +215,18 @@
     </table>
   </div>
 
-  @if (showCreateModal()) {
-    <div class="modal-overlay" (click)="onCloseCreateModal()">
+  @if (showClientModal()) {
+    <div class="modal-overlay" (click)="onCloseClientModal()">
       <div class="modal-content" (click)="$event.stopPropagation()">
-        <app-create-client
+        <app-client-details
+          [mode]="clientModalMode()"
+          [clientId]="selectedClient()?.user_id || null"
+          [initialData]="selectedClient()"
           (onClientCreated)="onClientCreated($event)"
-          (onClose)="onCloseCreateModal()">
-        </app-create-client>
+          (onClientUpdated)="onClientUpdated($event)"
+          (onClientDeleted)="onClientDeleted($event)"
+          (onClose)="onCloseClientModal()">
+        </app-client-details>
       </div>
     </div>
   }

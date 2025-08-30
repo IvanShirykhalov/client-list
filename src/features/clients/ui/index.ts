@@ -1,2 +1,2 @@
 export { ClientsComponent } from './clients.component';
-export * from './create-client';
+export * from './client-details';

@@ -4,7 +4,7 @@ import { HttpClient, provideHttpClient, withFetch } from '@angular/common/http';
 import { AppComponent } from './app/app.component';
 import { LoginComponent } from './app/login';
 import { AuthGuard } from './shared';
-import { ClientsComponent, CreateClientComponent } from './features';
+import { ClientsComponent, ClientDetailsComponent } from './features';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { importProvidersFrom } from '@angular/core';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -16,7 +16,7 @@ const routes: Routes = [
     path: 'clients',
     children: [
       { path: '', component: ClientsComponent, canActivate: [AuthGuard] },
-      { path: 'create', component: CreateClientComponent, canActivate: [AuthGuard] },
+      { path: 'create', component: ClientDetailsComponent, canActivate: [AuthGuard] },
       { path: 'push/:id', component: ClientsComponent, canActivate: [AuthGuard] }
     ]
   },

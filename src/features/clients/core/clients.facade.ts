@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, tap, catchError, of } from 'rxjs';
 
-import { ApiService, Client, ClientsResponse, TableSortDirectionType } from '../../../shared';
+import { ApiService, Client, ClientDetailsMode, ClientsResponse, TableSortDirectionType } from '../../../shared';
 
 /**
  * Фасад таблицы клиентов
@@ -19,7 +19,9 @@ export class ClientsFacade {
   public sortField: WritableSignal<string> = signal('user_id');
   public sortDirection: WritableSignal<TableSortDirectionType> = signal<TableSortDirectionType>(0);
   public isLoading: WritableSignal<boolean> = signal(false);
-  public showCreateModal: WritableSignal<boolean> = signal(false);
+  public showClientModal: WritableSignal<boolean> = signal(false);
+  public clientModalMode: WritableSignal<ClientDetailsMode> = signal(ClientDetailsMode.CREATE);
+  public selectedClient: WritableSignal<Client | null> = signal(null);
   public showPushModal: WritableSignal<boolean> = signal(false);
   public selectedClientIds: WritableSignal<number[]> = signal<number[]>([]);
   public selectedClientFio: WritableSignal<string> = signal<string>('');
@@ -52,7 +54,6 @@ export class ClientsFacade {
       return 0;
     });
   });
-
 
   private apiService: ApiService = inject(ApiService);
   private router: Router = inject(Router);
@@ -117,6 +118,10 @@ export class ClientsFacade {
 
   /**
    * Обработка сортировки по полю
+   *
+   * @param field - поля для сортировки
+   * @param direction - тип направления сортировки таблицы
+   *
    */
   public handleSort(field: string, direction: TableSortDirectionType): void {
     if (this.sortField() === field) {
@@ -129,13 +134,82 @@ export class ClientsFacade {
 
   /**
    * Получение текущего направления сортировки для поля
+   *
+   * @param  field - поля для сортировки
    */
   public getSortDirection(field: string): TableSortDirectionType {
     return this.sortField() === field ? this.sortDirection() : 0;
   }
 
   /**
+   * Открытие модального окна создания клиента
+   */
+  public openCreateModal(): void {
+    this.clientModalMode.set(ClientDetailsMode.CREATE);
+    this.selectedClient.set(null);
+    this.showClientModal.set(true);
+  }
+
+  /**
+   * Открытие модального окна редактирования клиента
+   *
+   * @param client - Клиент
+   */
+  public openEditModal(client: Client): void {
+    this.clientModalMode.set(ClientDetailsMode.EDIT);
+    this.selectedClient.set(client);
+    this.showClientModal.set(true);
+  }
+
+  /**
+   * Закрытие модального окна клиента
+   */
+  public closeClientModal(): void {
+    this.showClientModal.set(false);
+    this.selectedClient.set(null);
+  }
+
+  /**
+   * Добавление нового клиента в список
+   *
+   * @param newClient - новый клиент
+   */
+  public addClient(newClient: Client): void {
+    this.clients.update((clients: Client[]): Client[] => [newClient, ...clients]);
+    this.closeClientModal();
+  }
+
+  /**
+   * Обновление данных клиента в списке
+   *
+   * @param updatedClient - обновленный клиент
+  */
+  public updateClient(updatedClient: Client): void {
+    this.clients.update((clients: Client[]): Client[] =>
+      clients.map((client: Client): Client =>
+        client.user_id === updatedClient.user_id ? updatedClient : client
+      )
+    );
+    this.closeClientModal();
+  }
+
+  /**
+   * Удаление клиента из списка
+   *
+   * @param clientId - id клиента
+   */
+  public removeClient(clientId: number): void {
+    this.clients.update((clients: Client[]): Client[] =>
+      clients.filter(((client: Client): boolean => client.user_id !== clientId)
+      ));
+    this.closeClientModal();
+  }
+
+  /**
    * Открытие модального окна для отправки PUSH-уведомления
+   *
+   * @param clientIds - id'шники клиентов
+   * @param clients - клиенты
    */
   public openPushModal(clientIds: number[], clients: Client[]): void {
     const client: Client | undefined = clients.find(c => c.user_id === clientIds[0]);
@@ -148,6 +222,9 @@ export class ClientsFacade {
 
   /**
    * Открытие модального окна PUSH из параметров роута
+   *
+   * @param clientId - id клиента
+   * @param clients - клиенты
    */
   public openPushModalFromRoute(clientId: string, clients: Client[]): boolean {
     const id: number = Number(clientId);
@@ -163,6 +240,8 @@ export class ClientsFacade {
 
   /**
    * Отправка PUSH-уведомления выбранным клиентам
+   *
+   * @param message - сообщение в пуше
    */
   public sendPush(message: string): Observable<any> {
     if (!message.trim()) {
@@ -193,29 +272,9 @@ export class ClientsFacade {
   }
 
   /**
-   * Открытие модального окна создания клиента
-   */
-  public openCreateModal(): void {
-    this.showCreateModal.set(true);
-  }
-
-  /**
-   * Обработчик успешного создания клиента
-   */
-  public addClient(newClient: Client): void {
-    this.clients.update(clients => [newClient, ...clients]);
-    this.showCreateModal.set(false);
-  }
-
-  /**
-   * Закрытие модального окна создания клиента
-   */
-  public closeCreateModal(): void {
-    this.showCreateModal.set(false);
-  }
-
-  /**
    * Обновление URL для PUSH-уведомления
+   *
+   * @param clientId - id клиента
    */
   public updatePushUrl(clientId: number): void {
     this.router.navigate([], {

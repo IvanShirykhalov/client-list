@@ -7,13 +7,14 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import {
   Client,
+  ClientDetailsMode,
   EmptyCellDirective,
   PushModalComponent,
   TableSortDirectionType,
   TableSortingComponent,
 } from '../../../shared';
-import { CreateClientComponent } from './create-client';
 import { ClientsFacade } from '../core';
+import { ClientDetailsComponent } from './client-details';
 
 /**
  * Компонент со списком клиентов
@@ -22,7 +23,16 @@ import { ClientsFacade } from '../core';
   selector: 'app-clients',
   templateUrl: './clients.component.html',
   styleUrls: ['./clients.component.scss'],
-  imports: [CommonModule, FormsModule, PushModalComponent, RouterModule, CreateClientComponent, EmptyCellDirective, TableSortingComponent, TranslatePipe],
+  imports: [
+    CommonModule,
+    FormsModule,
+    PushModalComponent,
+    RouterModule,
+    ClientDetailsComponent,
+    EmptyCellDirective,
+    TableSortingComponent,
+    TranslatePipe
+  ],
   standalone: true,
 })
 export class ClientsComponent implements OnInit {
@@ -49,8 +59,16 @@ export class ClientsComponent implements OnInit {
     return this.facade.isLoading.asReadonly();
   }
 
-  public get showCreateModal(): Signal<boolean> {
-    return this.facade.showCreateModal.asReadonly();
+  public get showClientModal(): Signal<boolean> {
+    return this.facade.showClientModal.asReadonly();
+  }
+
+  public get clientModalMode(): Signal<ClientDetailsMode> {
+    return this.facade.clientModalMode.asReadonly();
+  }
+
+  public get selectedClient(): Signal<Client | null> {
+    return this.facade.selectedClient.asReadonly();
   }
 
   public get showPushModal(): Signal<boolean> {
@@ -152,17 +170,40 @@ export class ClientsComponent implements OnInit {
   }
 
   /**
+   * Открытие модального окна редактирования клиента
+   */
+  public openEditModal(client: Client): void {
+    this.facade.openEditModal(client);
+  }
+
+  /**
    * Обработчик успешного создания клиента
    */
   public onClientCreated(newClient: Client): void {
     this.facade.addClient(newClient);
-    alert(this.translate.instant('CREATE_MODAL.SUCCESS', { name: newClient.fio }));
+    alert(this.translate.instant('CLIENT_DETAILS.CREATE_SUCCESS', { name: newClient.fio }));
   }
 
   /**
-   * Закрытие модального окна создания клиента
+   * Обработчик успешного обновления клиента
    */
-  public onCloseCreateModal(): void {
-    this.facade.closeCreateModal();
+  public onClientUpdated(updatedClient: Client): void {
+    this.facade.updateClient(updatedClient);
+    alert(this.translate.instant('CLIENT_DETAILS.UPDATE_SUCCESS', { name: updatedClient.fio }));
+  }
+
+  /**
+   * Обработчик успешного удаления клиента
+   */
+  public onClientDeleted(clientId: number): void {
+    this.facade.removeClient(clientId);
+    alert(this.translate.instant('CLIENT_DETAILS.DELETE_SUCCESS'));
+  }
+
+  /**
+   * Закрытие модального окна работы с клиентом
+   */
+  public onCloseClientModal(): void {
+    this.facade.closeClientModal();
   }
 }

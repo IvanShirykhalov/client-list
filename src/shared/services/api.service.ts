@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError, of, delay } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { Client, ClientsResponse } from '../models';
@@ -63,27 +63,73 @@ export class ApiService {
 
   /**
    * Создает нового клиента
-   *
-   * @param clientData - данные клиента для создания
    */
-  public createClient(clientData: Partial<Client>): Observable<any> {
+  public createClient(clientData: Partial<Client>): Observable<Client> {
     const token: string = this.getToken();
-    const data: Partial<Client> = { ...clientData, template: 'Тестовый' };
 
-    return this.http.post(
+    const apiData: Partial<Client> = this.prepareClientData(clientData);
+
+    return this.http.post<Client>(
       `${this.baseUrl}/${token}/passes`,
-      data,
-      {
-        headers: this.getHeaders()
-      }
+      apiData,
+      { headers: this.getHeaders() }
     ).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.error('Create client failed, returning mock response:', error);
-        return of({
-          success: true,
-          message: 'Клиент успешно создан',
-          user_id: Math.floor(Math.random() * 1000) + 4
-        }).pipe(delay(500));
+        console.error('Create client failed:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  /**
+   * Обновляет данные клиента
+   */
+  public updateClient(userId: number, clientData: Partial<Client>): Observable<Client> {
+    const token: string = this.getToken();
+    const apiData: Partial<Client> = this.prepareClientData(clientData);
+
+    return this.http.put<Client>(
+      `${this.baseUrl}/${token}/passes/${userId}`,
+      apiData,
+      { headers: this.getHeaders() }
+    ).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Update client failed:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  /**
+   * Удаляет клиента
+   */
+  public deleteClient(userId: number): Observable<any> {
+    const token: string = this.getToken();
+
+    return this.http.delete(
+      `${this.baseUrl}/${token}/passes/${userId}`,
+      { headers: this.getHeaders() }
+    ).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Delete client failed:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  /**
+   * Получает данные конкретного клиента
+   */
+  public getClient(userId: number): Observable<Client> {
+    const token: string = this.getToken();
+
+    return this.http.get<Client>(
+      `${this.baseUrl}/${token}/passes/${userId}`,
+      { headers: this.getHeaders() }
+    ).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Get client failed:', error);
+        return throwError(() => error);
       })
     );
   }
@@ -112,6 +158,47 @@ export class ApiService {
         throw error;
       })
     );
+  }
+
+  /**
+   * Подготавливает данные клиента для API
+   */
+  private prepareClientData(clientData: Partial<Client>): any {
+    const { fio, first_name, last_name, pat_name, ...rest } = clientData;
+
+    let firstName: string | undefined = first_name;
+    let lastName: string | undefined  = last_name;
+    let patronymic: string | undefined  = pat_name;
+
+    if (fio && !first_name) {
+      const fioParts: string[] = fio.split(' ');
+      if (fioParts.length >= 2) {
+        lastName = fioParts[0];
+        firstName = fioParts[1];
+        patronymic = fioParts.length > 2 ? fioParts[2] : '';
+      }
+    }
+
+    return {
+      template: clientData.template || 'Тестовый',
+      first_name: firstName,
+      last_name: lastName,
+      pat_name: patronymic,
+      phone: clientData.phone,
+      email: clientData.email,
+      birthday: clientData.birthday,
+      gender: clientData.gender,
+      barcode: clientData.barcode,
+      discount: clientData.discount,
+      bonus: clientData.bonus ? Number(clientData.bonus) : undefined,
+      loyalty_level: clientData.loyalty_level,
+      city: clientData.city,
+      car_number: clientData.car_number,
+      key3: clientData.key3,
+      key4: clientData.key4,
+      key5: clientData.key5,
+      key6: clientData.key6
+    };
   }
 
   /**

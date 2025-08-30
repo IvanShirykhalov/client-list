@@ -167,6 +167,7 @@
           width: 100%;
           table-layout: fixed;
           transition: background-color 0.2s ease;
+          cursor: pointer;
 
           &:hover {
             background-color: var(--bg-secondary);
