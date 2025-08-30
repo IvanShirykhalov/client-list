@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular
 import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
-import { Client, ClientsResponse } from '../models';
+import { IClient, IClientsResponse } from '../models';
 
 /**
  * Сервис для работы с АПИ Teyca
@@ -25,7 +25,7 @@ export class ApiService {
    * @param limit - количество записей на странице (по умолчанию 1000)
    * @param offset - смещение для пагинации (по умолчанию 0)
    */
-  public getClients(searchTerm?: string, limit: number = 1000, offset: number = 0): Observable<ClientsResponse> {
+  public getClients(searchTerm?: string, limit: number = 1000, offset: number = 0): Observable<IClientsResponse> {
     const token: string = this.getToken();
 
     let params: HttpParams = new HttpParams()
@@ -37,7 +37,7 @@ export class ApiService {
       params = params.set('search', formattedSearch);
     }
 
-    return this.http.get<ClientsResponse>(
+    return this.http.get<IClientsResponse>(
       `${this.baseUrl}/${token}/passes`,
       {
         params,
@@ -64,12 +64,12 @@ export class ApiService {
   /**
    * Создает нового клиента
    */
-  public createClient(clientData: Partial<Client>): Observable<Client> {
+  public createClient(clientData: Partial<IClient>): Observable<IClient> {
     const token: string = this.getToken();
 
-    const apiData: Partial<Client> = this.prepareClientData(clientData);
+    const apiData: Partial<IClient> = this.prepareClientData(clientData);
 
-    return this.http.post<Client>(
+    return this.http.post<IClient>(
       `${this.baseUrl}/${token}/passes`,
       apiData,
       { headers: this.getHeaders() }
@@ -84,11 +84,11 @@ export class ApiService {
   /**
    * Обновляет данные клиента
    */
-  public updateClient(userId: number, clientData: Partial<Client>): Observable<Client> {
+  public updateClient(userId: number, clientData: Partial<IClient>): Observable<IClient> {
     const token: string = this.getToken();
-    const apiData: Partial<Client> = this.prepareClientData(clientData);
+    const apiData: Partial<IClient> = this.prepareClientData(clientData);
 
-    return this.http.put<Client>(
+    return this.http.put<IClient>(
       `${this.baseUrl}/${token}/passes/${userId}`,
       apiData,
       { headers: this.getHeaders() }
@@ -120,10 +120,10 @@ export class ApiService {
   /**
    * Получает данные конкретного клиента
    */
-  public getClient(userId: number): Observable<Client> {
+  public getClient(userId: number): Observable<IClient> {
     const token: string = this.getToken();
 
-    return this.http.get<Client>(
+    return this.http.get<IClient>(
       `${this.baseUrl}/${token}/passes/${userId}`,
       { headers: this.getHeaders() }
     ).pipe(
@@ -163,7 +163,7 @@ export class ApiService {
   /**
    * Подготавливает данные клиента для API
    */
-  private prepareClientData(clientData: Partial<Client>): any {
+  private prepareClientData(clientData: Partial<IClient>): any {
     const { fio, first_name, last_name, pat_name, ...rest } = clientData;
 
     let firstName: string | undefined = first_name;

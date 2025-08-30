@@ -6,7 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import {
-  Client,
+  IClient,
   ClientDetailsMode,
   EmptyCellDirective,
   PushModalComponent,
@@ -43,7 +43,7 @@ export class ClientsComponent implements OnInit {
   ) {
   }
 
-  public get clients(): Signal<Client[]> {
+  public get clients(): Signal<IClient[]> {
     return this.facade.clients.asReadonly();
   }
 
@@ -67,7 +67,7 @@ export class ClientsComponent implements OnInit {
     return this.facade.clientModalMode.asReadonly();
   }
 
-  public get selectedClient(): Signal<Client | null> {
+  public get selectedClient(): Signal<IClient | null> {
     return this.facade.selectedClient.asReadonly();
   }
 
@@ -79,7 +79,7 @@ export class ClientsComponent implements OnInit {
     return this.facade.selectedClientFio.asReadonly();
   }
 
-  public get filteredClients(): Signal<Client[]> {
+  public get filteredClients(): Signal<IClient[]> {
     return this.facade.filteredClients;
   }
 
@@ -172,14 +172,14 @@ export class ClientsComponent implements OnInit {
   /**
    * Открытие модального окна редактирования клиента
    */
-  public openEditModal(client: Client): void {
+  public openEditModal(client: IClient): void {
     this.facade.openEditModal(client);
   }
 
   /**
    * Обработчик успешного создания клиента
    */
-  public onClientCreated(newClient: Client): void {
+  public onClientCreated(newClient: IClient): void {
     this.facade.addClient(newClient);
     alert(this.translate.instant('CLIENT_DETAILS.CREATE_SUCCESS', { name: newClient.fio }));
   }
@@ -187,7 +187,7 @@ export class ClientsComponent implements OnInit {
   /**
    * Обработчик успешного обновления клиента
    */
-  public onClientUpdated(updatedClient: Client): void {
+  public onClientUpdated(updatedClient: IClient): void {
     this.facade.updateClient(updatedClient);
     alert(this.translate.instant('CLIENT_DETAILS.UPDATE_SUCCESS', { name: updatedClient.fio }));
   }

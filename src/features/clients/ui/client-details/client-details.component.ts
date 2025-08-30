@@ -16,7 +16,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
-import { Client, ApiService, CustomInputComponent, ClientDetailsMode } from '../../../../shared';
+import { IClient, ApiService, CustomInputComponent, ClientDetailsMode } from '../../../../shared';
 
 /**
  * Компонент для создания и редактирования клиента
@@ -31,10 +31,10 @@ import { Client, ApiService, CustomInputComponent, ClientDetailsMode } from '../
 export class ClientDetailsComponent implements OnInit {
   public mode: InputSignal<ClientDetailsMode> = input<ClientDetailsMode>(ClientDetailsMode.CREATE);
   public clientId: InputSignal<number | null> = input<number | null>(null);
-  public initialData: InputSignal<Partial<Client> | null> = input<Partial<Client> | null>(null);
+  public initialData: InputSignal<Partial<IClient> | null> = input<Partial<IClient> | null>(null);
 
-  public onClientCreated: OutputEmitterRef<Client> = output<Client>();
-  public onClientUpdated: OutputEmitterRef<Client> = output<Client>();
+  public onClientCreated: OutputEmitterRef<IClient> = output<IClient>();
+  public onClientUpdated: OutputEmitterRef<IClient> = output<IClient>();
   public onClientDeleted: OutputEmitterRef<number> = output<number>();
   public onClose: OutputEmitterRef<void> = output<void>();
 
@@ -86,9 +86,9 @@ export class ClientDetailsComponent implements OnInit {
     this.errorMessage.set('');
     this.successMessage.set('');
 
-    const clientData: Partial<Client> = this.prepareClientData();
+    const clientData: Partial<IClient> = this.prepareClientData();
 
-    const operation: Observable<Client> = this.mode() === ClientDetailsMode.CREATE
+    const operation: Observable<IClient> = this.mode() === ClientDetailsMode.CREATE
       ? this.apiService.createClient(clientData)
       : this.apiService.updateClient(this.clientId()!, clientData);
 
@@ -232,7 +232,7 @@ export class ClientDetailsComponent implements OnInit {
   /**
    * Подготовка данных для отправки
    */
-  private prepareClientData(): Partial<Client> {
+  private prepareClientData(): Partial<IClient> {
     return {
       fio: this.fio,
       phone: this.phone || undefined,
@@ -256,7 +256,7 @@ export class ClientDetailsComponent implements OnInit {
   /**
    * Обработка успешного сохранения
    */
-  private handleSaveSuccess(savedClient: Client): void {
+  private handleSaveSuccess(savedClient: IClient): void {
     this.saving.set(false);
 
     if (this.mode() === ClientDetailsMode.CREATE) {
@@ -299,7 +299,7 @@ export class ClientDetailsComponent implements OnInit {
    * Загрузка данных клиента для редактирования/просмотра
    */
   private loadClientData(): void {
-    const initialData: Partial<Client> | null = this.initialData();
+    const initialData: Partial<IClient> | null = this.initialData();
 
     if (this.mode() === ClientDetailsMode.EDIT && initialData) {
       this.populateForm(initialData);
@@ -309,7 +309,7 @@ export class ClientDetailsComponent implements OnInit {
   /**
    * Заполнение формы данными клиента
    */
-  private populateForm(clientData: Partial<Client>): void {
+  private populateForm(clientData: Partial<IClient>): void {
     this.fio = clientData.fio || '';
     this.phone = clientData.phone || '';
     this.email = clientData.email || '';

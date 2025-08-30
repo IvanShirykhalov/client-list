@@ -1,13 +1,13 @@
-import { Client } from './client.interface';
+import { IClient } from './client.interface';
 
 /**
  * Описывает ответ API при запросе списка клиентов
  */
-export interface ClientsResponse {
+export interface IClientsResponse {
   meta: {
     size: number;
     limit: number;
     offset: number;
   };
-  passes: Client[];
+  passes: IClient[];
 }

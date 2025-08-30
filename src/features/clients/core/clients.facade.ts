@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, tap, catchError, of } from 'rxjs';
 
-import { ApiService, Client, ClientDetailsMode, ClientsResponse, TableSortDirectionType } from '../../../shared';
+import { ApiService, IClient, ClientDetailsMode, IClientsResponse, TableSortDirectionType } from '../../../shared';
 
 /**
  * Фасад таблицы клиентов
@@ -13,7 +13,7 @@ import { ApiService, Client, ClientDetailsMode, ClientsResponse, TableSortDirect
   providedIn: 'root'
 })
 export class ClientsFacade {
-  public clients: WritableSignal<Client[]> = signal<Client[]>([]);
+  public clients: WritableSignal<IClient[]> = signal<IClient[]>([]);
   public searchTerm: WritableSignal<string> = signal('');
   public searchError: WritableSignal<string> = signal('');
   public sortField: WritableSignal<string> = signal('user_id');
@@ -21,13 +21,13 @@ export class ClientsFacade {
   public isLoading: WritableSignal<boolean> = signal(false);
   public showClientModal: WritableSignal<boolean> = signal(false);
   public clientModalMode: WritableSignal<ClientDetailsMode> = signal(ClientDetailsMode.CREATE);
-  public selectedClient: WritableSignal<Client | null> = signal(null);
+  public selectedClient: WritableSignal<IClient | null> = signal(null);
   public showPushModal: WritableSignal<boolean> = signal(false);
   public selectedClientIds: WritableSignal<number[]> = signal<number[]>([]);
   public selectedClientFio: WritableSignal<string> = signal<string>('');
 
-  public filteredClients: Signal<Client[]> = computed((): Client[] => {
-    const clientsList: Client[] = this.clients();
+  public filteredClients: Signal<IClient[]> = computed((): IClient[] => {
+    const clientsList: IClient[] = this.clients();
     const field: string = this.sortField();
     const direction: TableSortDirectionType = this.sortDirection();
 
@@ -35,9 +35,9 @@ export class ClientsFacade {
       return clientsList;
     }
 
-    return [...clientsList].sort((a: Client, b: Client): number => {
-      let valueA: string | number | boolean = a[field as keyof Client];
-      let valueB: string | number | boolean = b[field as keyof Client];
+    return [...clientsList].sort((a: IClient, b: IClient): number => {
+      let valueA: string | number | boolean = a[field as keyof IClient];
+      let valueB: string | number | boolean = b[field as keyof IClient];
 
       if (valueA === undefined || valueA === null) valueA = '';
       if (valueB === undefined || valueB === null) valueB = '';
@@ -63,7 +63,7 @@ export class ClientsFacade {
   /**
    * Загрузка списка клиентов с учетом поискового запроса
    */
-  public loadClients(): Observable<ClientsResponse> {
+  public loadClients(): Observable<IClientsResponse> {
     if (this.isLoading()) {
       return of({
         meta: { size: 0, limit: 0, offset: 0 },
@@ -77,7 +77,7 @@ export class ClientsFacade {
     return this.apiService.getClients(this.searchTerm()).pipe(
       takeUntilDestroyed(this.destroyRef),
       tap({
-        next: (response: ClientsResponse) => {
+        next: (response: IClientsResponse) => {
           this.clients.set(response.passes);
           this.isLoading.set(false);
 
@@ -155,7 +155,7 @@ export class ClientsFacade {
    *
    * @param client - Клиент
    */
-  public openEditModal(client: Client): void {
+  public openEditModal(client: IClient): void {
     this.clientModalMode.set(ClientDetailsMode.EDIT);
     this.selectedClient.set(client);
     this.showClientModal.set(true);
@@ -174,8 +174,8 @@ export class ClientsFacade {
    *
    * @param newClient - новый клиент
    */
-  public addClient(newClient: Client): void {
-    this.clients.update((clients: Client[]): Client[] => [newClient, ...clients]);
+  public addClient(newClient: IClient): void {
+    this.clients.update((clients: IClient[]): IClient[] => [newClient, ...clients]);
     this.closeClientModal();
   }
 
@@ -184,9 +184,9 @@ export class ClientsFacade {
    *
    * @param updatedClient - обновленный клиент
   */
-  public updateClient(updatedClient: Client): void {
-    this.clients.update((clients: Client[]): Client[] =>
-      clients.map((client: Client): Client =>
+  public updateClient(updatedClient: IClient): void {
+    this.clients.update((clients: IClient[]): IClient[] =>
+      clients.map((client: IClient): IClient =>
         client.user_id === updatedClient.user_id ? updatedClient : client
       )
     );
@@ -199,8 +199,8 @@ export class ClientsFacade {
    * @param clientId - id клиента
    */
   public removeClient(clientId: number): void {
-    this.clients.update((clients: Client[]): Client[] =>
-      clients.filter(((client: Client): boolean => client.user_id !== clientId)
+    this.clients.update((clients: IClient[]): IClient[] =>
+      clients.filter(((client: IClient): boolean => client.user_id !== clientId)
       ));
     this.closeClientModal();
   }
@@ -211,8 +211,8 @@ export class ClientsFacade {
    * @param clientIds - id'шники клиентов
    * @param clients - клиенты
    */
-  public openPushModal(clientIds: number[], clients: Client[]): void {
-    const client: Client | undefined = clients.find(c => c.user_id === clientIds[0]);
+  public openPushModal(clientIds: number[], clients: IClient[]): void {
+    const client: IClient | undefined = clients.find(c => c.user_id === clientIds[0]);
     if (client) {
       this.selectedClientIds.set(clientIds);
       this.selectedClientFio.set(client.fio || this.translate.instant('APP.CLIENT'));
@@ -226,10 +226,10 @@ export class ClientsFacade {
    * @param clientId - id клиента
    * @param clients - клиенты
    */
-  public openPushModalFromRoute(clientId: string, clients: Client[]): boolean {
+  public openPushModalFromRoute(clientId: string, clients: IClient[]): boolean {
     const id: number = Number(clientId);
     if (!isNaN(id)) {
-      const client: Client | undefined = clients.find(c => c.user_id === id);
+      const client: IClient | undefined = clients.find(c => c.user_id === id);
       if (client) {
         this.openPushModal([id], clients);
         return true;

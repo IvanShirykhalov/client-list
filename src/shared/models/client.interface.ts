@@ -1,7 +1,7 @@
 /**
  * Описывает клиента
  */
-export interface Client {
+export interface IClient {
   user_id: number;
   template: string;
   fio: string;
