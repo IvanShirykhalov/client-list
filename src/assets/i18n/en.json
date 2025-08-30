@@ -92,7 +92,7 @@
     "CREATED_AT": "Created"
   },
   "PUSH_MODAL": {
-    "SUCCESS": "PUSH message sent to {count} clients!",
+    "SUCCESS": "PUSH message sent!",
     "TITLE": "Send PUSH message",
     "RECIPIENT": "Recipient",
     "MESSAGE": "Message",
@@ -142,7 +142,7 @@
     "KEY5_PLACEHOLDER": "Key 5",
     "KEY6_LABEL": "Additional key 6",
     "KEY6_PLACEHOLDER": "Key 6",
-    "SUCCESS": "Client \"{name}\" created successfully!"
+    "SUCCESS": "Client created successfully!"
   },
   "ERRORS": {
     "SAVE_ERROR": "Error saving client data",
@@ -151,7 +151,7 @@
     "DELETE_ERROR": "Error deleting client",
     "SEARCH_ERROR": "Data loading error",
     "SEARCH_MIN_LENGTH": "Enter search data",
-    "CLIENT_NOT_FOUND": "Client with ID {id} not found",
+    "CLIENT_NOT_FOUND": "Client not found",
     "EMPTY_MESSAGE": "Message cannot be empty",
     "SEND_PUSH_ERROR": "Error sending message",
     "CREATE_ERROR": "Error creating client",

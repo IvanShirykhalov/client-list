@@ -92,7 +92,7 @@
     "CREATED_AT": "Создан"
   },
   "PUSH_MODAL": {
-    "SUCCESS": "PUSH-сообщение отправлено {count} клиентам!",
+    "SUCCESS": "PUSH-сообщение отправлено!",
     "TITLE": "Отправить PUSH-сообщение",
     "RECIPIENT": "Получатель",
     "MESSAGE": "Сообщение",
@@ -142,7 +142,7 @@
     "KEY5_PLACEHOLDER": "Ключ 5",
     "KEY6_LABEL": "Доп. ключ 6",
     "KEY6_PLACEHOLDER": "Ключ 6",
-    "SUCCESS": "Клиент \"{name}\" успешно создан!"
+    "SUCCESS": "Клиент успешно создан!"
   },
   "ERRORS": {
     "SAVE_ERROR": "Ошибка сохранения данных клиента",
@@ -151,7 +151,7 @@
     "DELETE_ERROR": "Ошибка удаления клиента",
     "SEARCH_ERROR": "Ошибка загрузки данных",
     "SEARCH_MIN_LENGTH": "Введите данные для поиска",
-    "CLIENT_NOT_FOUND": "Клиент с ID {id} не найден",
+    "CLIENT_NOT_FOUND": "Клиент не найден",
     "EMPTY_MESSAGE": "Сообщение не может быть пустым",
     "SEND_PUSH_ERROR": "Ошибка при отправке сообщения",
     "CREATE_ERROR": "Ошибка создания клиента",
