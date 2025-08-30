@@ -1,10 +1,13 @@
 import { Component, Input, forwardRef, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from '@angular/forms';
+import {
+  NG_VALUE_ACCESSOR,
+  ControlValueAccessor,
+  FormsModule
+} from '@angular/forms';
 
 /**
  * Кастомный компонент input с поддержкой ControlValueAccessor
- * для интеграции с Angular Forms
  */
 @Component({
   selector: 'app-custom-input',
@@ -29,6 +32,7 @@ export class CustomInputComponent implements ControlValueAccessor {
   @Output() public blurEvent: EventEmitter<void> = new EventEmitter<void>();
 
   public value: string = '';
+  public touched: boolean = false;
 
   /**
    * Устанавливает значение поля из внешнего источника
@@ -81,13 +85,16 @@ export class CustomInputComponent implements ControlValueAccessor {
    * Обработчик события blur
    */
   public onInputBlur(): void {
+    this.touched = true;
     this.onTouched();
     this.blurEvent.emit();
   }
 
   /** Callback функция для уведомления об изменении значения */
-  private onChange: (value: string) => void = (): void => {};
+  private onChange: (value: string) => void = (): void => {
+  };
 
   /** Callback функция для уведомления о касании поля */
-  private onTouched: () => void = (): void => {};
+  private onTouched: () => void = (): void => {
+  };
 }

@@ -11,10 +11,9 @@ import {
   WritableSignal
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { ClientDetailsMode, CustomInputComponent, IClient } from '../../../../shared';
@@ -28,7 +27,13 @@ import { HttpErrorResponse } from '@angular/common/http';
   selector: 'app-client-details',
   templateUrl: './client-details.component.html',
   styleUrls: ['./client-details.component.scss'],
-  imports: [CommonModule, FormsModule, CustomInputComponent, TranslateModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    CustomInputComponent,
+    TranslateModule
+  ],
   standalone: true
 })
 export class ClientDetailsComponent implements OnInit {
@@ -41,23 +46,7 @@ export class ClientDetailsComponent implements OnInit {
   public onClientDeleted: OutputEmitterRef<number> = output<number>();
   public onClose: OutputEmitterRef<void> = output<void>();
 
-  public fio: string = '';
-  public phone: string = '';
-  public email: string = '';
-  public city: string = '';
-  public birthday: string = '';
-  public gender: string = '';
-  public carNumber: string = '';
-  public discount: string = '';
-  public bonus: string = '';
-  public loyaltyLevel: string = '';
-  public template: string = 'Тестовый';
-  public barcode: string = '';
-  public key3: string = '';
-  public key4: string = '';
-  public key5: string = '';
-  public key6: string = '';
-
+  public clientForm!: FormGroup;
   public loading: WritableSignal<boolean> = signal(false);
   public saving: WritableSignal<boolean> = signal(false);
   public deleting: WritableSignal<boolean> = signal(false);
@@ -65,15 +54,16 @@ export class ClientDetailsComponent implements OnInit {
   public successMessage: WritableSignal<string> = signal('');
   public activeTab: WritableSignal<string> = signal('basic');
 
+  private formBuilder: FormBuilder = inject(FormBuilder);
   private clientsRepository: ClientsRepository = inject(ClientsRepository);
   private destroyRef: DestroyRef = inject(DestroyRef);
   private translate: TranslateService = inject(TranslateService);
-  private router: Router = inject(Router);
 
   /**
-   * Инициализация компонента
+   * @inheritDoc
    */
   public ngOnInit(): void {
+    this.initForm();
     this.loadClientData();
   }
 
@@ -81,7 +71,9 @@ export class ClientDetailsComponent implements OnInit {
    * Сохранение данных клиента
    */
   public saveClient(): void {
-    if (!this.validateForm()) {
+    if (this.clientForm.invalid) {
+      this.markAllAsTouched();
+      this.errorMessage.set(this.translate.instant('CLIENT_DETAILS.VALIDATION_ERROR'));
       return;
     }
 
@@ -124,6 +116,7 @@ export class ClientDetailsComponent implements OnInit {
         next: () => {
           this.onClientDeleted.emit(this.clientId()!);
           this.successMessage.set(this.translate.instant('CLIENT_DETAILS.DELETE_SUCCESS'));
+          setTimeout(() => this.close(), 1500);
         },
         error: (error) => {
           this.errorMessage.set(this.translate.instant('ERRORS.DELETE_ERROR'));
@@ -164,94 +157,34 @@ export class ClientDetailsComponent implements OnInit {
     }
   }
 
-
-  /**
-   * Сброс формы
-   */
-  private resetForm(): void {
-    this.fio = '';
-    this.phone = '';
-    this.email = '';
-    this.city = '';
-    this.birthday = '';
-    this.gender = '';
-    this.carNumber = '';
-    this.discount = '';
-    this.bonus = '';
-    this.loyaltyLevel = '';
-    this.template = 'Тестовый';
-    this.barcode = '';
-    this.key3 = '';
-    this.key4 = '';
-    this.key5 = '';
-    this.key6 = '';
-
-    this.errorMessage.set('');
-    this.successMessage.set('');
-    this.saving.set(false);
-    this.deleting.set(false);
-    this.activeTab.set('basic');
-  }
-
-  /**
-   * Валидация формы
-   */
-  private validateForm(): boolean {
-    if (!this.fio.trim()) {
-      this.errorMessage.set(this.translate.instant('CLIENT_DETAILS.REQUIRED_FIO_ERROR'));
-      return false;
-    }
-
-    if (this.phone && !this.isValidPhone(this.phone)) {
-      this.errorMessage.set(this.translate.instant('CLIENT_DETAILS.INVALID_PHONE_ERROR'));
-      return false;
-    }
-
-    if (this.email && !this.isValidEmail(this.email)) {
-      this.errorMessage.set(this.translate.instant('CLIENT_DETAILS.INVALID_EMAIL_ERROR'));
-      return false;
-    }
-
-    return true;
-  }
-
-  /**
-   * Проверка валидности телефона
-   */
-  private isValidPhone(phone: string): boolean {
-    const phoneRegex: RegExp = /^[+]?[0-9]{10,15}$/;
-    return phoneRegex.test(phone.replace(/[\s()-]/g, ''));
-  }
-
-  /**
-   * Проверка валидности email
-   */
-  private isValidEmail(email: string): boolean {
-    const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+  private markAllAsTouched(): void {
+    Object.keys(this.clientForm.controls).forEach(key => {
+      this.clientForm.get(key)?.markAsTouched();
+    });
   }
 
   /**
    * Подготовка данных для отправки
    */
   private prepareClientData(): Partial<IClient> {
+    const formValue = this.clientForm.value;
     return {
-      fio: this.fio,
-      phone: this.phone || undefined,
-      email: this.email || undefined,
-      city: this.city || undefined,
-      birthday: this.birthday || undefined,
-      gender: this.gender || undefined,
-      car_number: this.carNumber || undefined,
-      discount: this.discount || undefined,
-      bonus: this.bonus || undefined,
-      loyalty_level: this.loyaltyLevel || undefined,
-      template: this.template,
-      barcode: this.barcode || undefined,
-      key3: this.key3 || undefined,
-      key4: this.key4 || undefined,
-      key5: this.key5 || undefined,
-      key6: this.key6 || undefined,
+      fio: formValue.fio,
+      phone: formValue.phone || undefined,
+      email: formValue.email || undefined,
+      city: formValue.city || undefined,
+      birthday: formValue.birthday || undefined,
+      gender: formValue.gender || undefined,
+      car_number: formValue.carNumber || undefined,
+      discount: formValue.discount || undefined,
+      bonus: formValue.bonus || undefined,
+      loyalty_level: formValue.loyaltyLevel || undefined,
+      template: formValue.template,
+      barcode: formValue.barcode || undefined,
+      key3: formValue.key3 || undefined,
+      key4: formValue.key4 || undefined,
+      key5: formValue.key5 || undefined,
+      key6: formValue.key6 || undefined,
     };
   }
 
@@ -264,15 +197,11 @@ export class ClientDetailsComponent implements OnInit {
     if (this.mode() === ClientDetailsMode.CREATE) {
       this.onClientCreated.emit(savedClient);
       this.successMessage.set(this.translate.instant('CLIENT_DETAILS.CREATE_SUCCESS'));
+      this.resetForm();
     } else {
       this.onClientUpdated.emit(savedClient);
       this.successMessage.set(this.translate.instant('CLIENT_DETAILS.UPDATE_SUCCESS'));
-    }
-
-    if (this.mode() === ClientDetailsMode.CREATE) {
-      this.resetForm();
-    } else {
-      this.close();
+      setTimeout(() => this.close(), 1500);
     }
   }
 
@@ -295,8 +224,44 @@ export class ClientDetailsComponent implements OnInit {
   }
 
   /**
-   * Загрузка данных клиента для редактирования/просмотра
+   * Инициализация формы
    */
+  private initForm(): void {
+    this.clientForm = this.formBuilder.group({
+      fio: ['', [Validators.required, Validators.maxLength(100)]],
+      phone: ['', [Validators.pattern(/^[+]?[0-9]{10,15}$/)]],
+      email: ['', [Validators.email]],
+      city: ['', [Validators.maxLength(50)]],
+      birthday: [''],
+      gender: [''],
+      carNumber: ['', [Validators.maxLength(20)]],
+      template: [{ value: 'Тестовый', disabled: true }, [Validators.required]],
+      discount: ['', [Validators.min(0), Validators.max(100)]],
+      bonus: ['', [Validators.min(0)]],
+      loyaltyLevel: ['', [Validators.maxLength(50)]],
+      barcode: ['', [Validators.maxLength(100)]],
+      key3: ['', [Validators.maxLength(100)]],
+      key4: ['', [Validators.maxLength(100)]],
+      key5: ['', [Validators.maxLength(100)]],
+      key6: ['', [Validators.maxLength(100)]]
+    });
+  }
+
+  /**
+   * Сброс формы
+   */
+  private resetForm(): void {
+    this.clientForm.reset({
+      template: 'Тестовый'
+    });
+    this.clientForm.markAsUntouched();
+    this.errorMessage.set('');
+    this.successMessage.set('');
+    this.saving.set(false);
+    this.deleting.set(false);
+    this.activeTab.set('basic');
+  }
+
   private loadClientData(): void {
     const initialData: Partial<IClient> | null = this.initialData();
 
@@ -309,22 +274,24 @@ export class ClientDetailsComponent implements OnInit {
    * Заполнение формы данными клиента
    */
   private populateForm(clientData: Partial<IClient>): void {
-    this.fio = clientData.fio || '';
-    this.phone = clientData.phone || '';
-    this.email = clientData.email || '';
-    this.city = clientData.city || '';
-    this.birthday = clientData.birthday || '';
-    this.gender = clientData.gender || '';
-    this.carNumber = clientData.car_number || '';
-    this.discount = clientData.discount || '';
-    this.bonus = clientData.bonus || '';
-    this.loyaltyLevel = clientData.loyalty_level || '';
-    this.template = clientData.template || 'Тестовый';
-    this.barcode = clientData.barcode || '';
-    this.key3 = clientData.key3 || '';
-    this.key4 = clientData.key4 || '';
-    this.key5 = clientData.key5 || '';
-    this.key6 = clientData.key6 || '';
+    this.clientForm.patchValue({
+      fio: clientData.fio || '',
+      phone: clientData.phone || '',
+      email: clientData.email || '',
+      city: clientData.city || '',
+      birthday: clientData.birthday || '',
+      gender: clientData.gender || '',
+      carNumber: clientData.car_number || '',
+      discount: clientData.discount || '',
+      bonus: clientData.bonus || '',
+      loyaltyLevel: clientData.loyalty_level || '',
+      template: clientData.template || 'Тестовый',
+      barcode: clientData.barcode || '',
+      key3: clientData.key3 || '',
+      key4: clientData.key4 || '',
+      key5: clientData.key5 || '',
+      key6: clientData.key6 || ''
+    });
 
     this.loading.set(false);
   }
