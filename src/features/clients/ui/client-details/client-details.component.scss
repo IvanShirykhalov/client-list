@@ -7,7 +7,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
   padding: 1rem;
 
@@ -25,7 +24,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 1.25rem 1.25rem 0.9375rem 1.25rem;
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 1px solid var(--border-color);
       flex-shrink: 0;
 
       h3 {
@@ -49,7 +48,7 @@
         transition: all 0.2s ease;
 
         &:hover {
-          background-color: #f3f4f6;
+          background-color: var(--bg-tertiary);
           color: #374151;
         }
 
@@ -82,8 +81,8 @@
         .loader {
           width: 20px;
           height: 20px;
-          border: 2px solid #e5e7eb;
-          border-top: 2px solid #3b82f6;
+          border: 2px solid var(--border-color);
+          border-top: 2px solid var(--border-focus);
           border-radius: 50%;
           animation: spin 1s linear infinite;
           margin-right: 0.5rem;
@@ -113,7 +112,7 @@
       .tabs {
         display: flex;
         justify-content: space-between;
-        border-bottom: 1px solid #e5e7eb;
+        border-bottom: 1px solid var(--border-color);
         margin-bottom: 1.25rem;
         flex-shrink: 0;
 
@@ -129,8 +128,8 @@
           white-space: nowrap;
 
           &.active {
-            border-bottom-color: #3b82f6;
-            color: #3b82f6;
+            border-bottom-color: var(--border-focus);
+            color: var(--primary-color);
             font-weight: 500;
           }
 
@@ -253,7 +252,7 @@
 
           &:focus {
             outline: none;
-            border-color: #3b82f6;
+            border-color: var(--border-focus);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
           }
 
@@ -277,9 +276,10 @@
 
     .modal-footer {
       padding: 1.25rem;
-      border-top: 1px solid #e5e7eb;
+      border-top: 1px solid var(--border-color);
       background-color: #f9fafb;
       flex-shrink: 0;
+      border-radius: var(--radius-lg);
 
       .footer-buttons {
         display: flex;
@@ -330,8 +330,8 @@
           }
 
           &.btn-primary {
-            background-color: #3b82f6;
-            border: 1px solid #3b82f6;
+            background-color: var(--primary-color);
+            border: 1px solid var(--border-focus);
             color: white;
 
             &:hover:not(:disabled) {
