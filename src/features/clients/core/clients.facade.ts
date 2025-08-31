@@ -107,6 +107,7 @@ export class ClientsFacade {
     if (this.searchTerm().trim().length === 0) {
       this.searchTerm.set('');
       this.searchError.set('');
+      this.refreshClientsFromServer();
       return;
     }
 
@@ -178,6 +179,7 @@ export class ClientsFacade {
    */
   public addClient(newClient: IClient): void {
     this.clients.update((clients: IClient[]): IClient[] => [newClient, ...clients]);
+    this.refreshClientsFromServer();
     this.closeClientModal();
   }
 
@@ -192,6 +194,7 @@ export class ClientsFacade {
         client.user_id === updatedClient.user_id ? updatedClient : client
       )
     );
+    this.refreshClientsFromServer();
     this.closeClientModal();
   }
 
@@ -204,6 +207,7 @@ export class ClientsFacade {
     this.clients.update((clients: IClient[]): IClient[] =>
       clients.filter(((client: IClient): boolean => client.user_id !== clientId)
       ));
+    this.refreshClientsFromServer();
     this.closeClientModal();
   }
 
@@ -296,4 +300,12 @@ export class ClientsFacade {
       replaceUrl: true
     });
   }
+
+  /**
+   * Перезагрузка списка клиентов
+   */
+  public refreshClientsFromServer(): void {
+    this.loadClients().subscribe();
+  }
+
 }

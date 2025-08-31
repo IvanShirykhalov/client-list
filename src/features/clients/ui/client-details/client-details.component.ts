@@ -294,7 +294,6 @@ export class ClientDetailsComponent implements OnInit {
     } else {
       this.onClientUpdated.emit(savedClient);
       this.successMessage.set(this.translate.instant('CLIENT_DETAILS.UPDATE_SUCCESS'));
-      setTimeout(() => this.close(), 1500);
     }
   }
 

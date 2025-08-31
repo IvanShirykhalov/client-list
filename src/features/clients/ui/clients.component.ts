@@ -46,8 +46,8 @@ export class ClientsComponent implements OnInit {
   ) {
   }
 
-  public get clients(): Signal<IClient[]> {
-    return this.facade.clients.asReadonly();
+  public get displayedClients(): Signal<IClient[]> {
+    return this.facade.filteredClients;
   }
 
   public get searchTerm(): WritableSignal<string> {
@@ -97,7 +97,7 @@ export class ClientsComponent implements OnInit {
       .subscribe(params => {
         const clientId: string | undefined = params['id'];
         if (clientId) {
-          const found: boolean = this.facade.openPushModalFromRoute(clientId, this.clients());
+          const found: boolean = this.facade.openPushModalFromRoute(clientId, this.displayedClients());
           if (!found) {
             console.warn(this.translate.instant('ERRORS.CLIENT_NOT_FOUND', { id: clientId }));
           }
@@ -130,7 +130,7 @@ export class ClientsComponent implements OnInit {
    * Открытие модального окна для отправки PUSH-уведомления
    */
   public openPushModal(clientIds: number[]): void {
-    this.facade.openPushModal(clientIds, this.clients());
+    this.facade.openPushModal(clientIds, this.displayedClients());
     this.facade.updatePushUrl(clientIds[0]);
   }
 
