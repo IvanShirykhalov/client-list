@@ -157,5 +157,24 @@
     "CREATE_ERROR": "Error creating client",
     "LOGIN_ERROR": "Invalid username or password",
     "UNKNOWN_ERROR": "Unknown error"
+  },
+  "VALIDATION": {
+    "FIO_REQUIRED": "Full name is required",
+    "MAX_LENGTH": "Maximum length: {{max}} characters",
+    "FIO_PATTERN": "Full name can only contain letters and hyphens",
+    "PHONE_FORMAT": "Invalid phone format",
+    "PHONE_MIN_DIGITS": "Phone must contain at least 10 digits",
+    "PHONE_MAX_DIGITS": "Phone must contain no more than 15 digits",
+    "EMAIL_FORMAT": "Invalid email format",
+    "CITY_PATTERN": "City can only contain letters and hyphens",
+    "FUTURE_DATE": "Date cannot be in the future",
+    "CAR_NUMBER_PATTERN": "Car number can only contain letters, numbers and hyphens",
+    "MIN_VALUE": "Minimum value: {{min}}",
+    "MAX_VALUE": "Maximum value: {{max}}",
+    "NUMERIC_ONLY": "Only numbers are allowed",
+    "INVALID_FIELD": "Invalid field value",
+    "CAR_NUMBER_FORMAT": "Number format: letter (ru) + 3 digits + 2 letters (ru) + 2-3 region digits (A222AA77)",
+    "CAR_NUMBER_ALLOWED_LETTERS": "Allowed letters: А, В, Е, К, М, Н, О, Р, С, Т, У, Х (ru letters)",
+    "INVALID_REGION": "Region code must be from 01 to 999"
   }
 }
