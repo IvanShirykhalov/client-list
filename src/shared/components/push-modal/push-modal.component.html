@@ -1,40 +1,42 @@
-<div class="push-modal">
-  <div class="modal-header">
-    <h3>{{ 'PUSH_MODAL.TITLE' | translate }}</h3>
-    <button class="close-btn" (click)="close()">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M13 1L1 13M1 1L13 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-    </button>
-  </div>
-
-  <div class="modal-body">
-    <p class="recipients-info"> {{ 'PUSH_MODAL.RECIPIENT' | translate }}: {{ recipientName() }}</p>
-
-    <div class="form-group">
-      <label for="pushMessage">{{ 'PUSH_MODAL.MESSAGE' | translate }}:</label>
-      <textarea
-        id="pushMessage"
-        [ngModel]="message()"
-        (ngModelChange)="message.set($event)"
-        placeholder="{{ 'PUSH_MODAL.MESSAGE_PLACEHOLDER' | translate }}"
-        rows="4"
-        class="message-input"
-      ></textarea>
+<div class="push-modal-wrapper">
+  <div class="push-modal">
+    <div class="modal-header">
+      <h3>{{ 'PUSH_MODAL.TITLE' | translate }}</h3>
+      <button class="close-btn" (click)="close()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13 1L1 13M1 1L13 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
     </div>
-  </div>
 
-  <div class="modal-footer">
+    <div class="modal-body">
+      <p class="recipients-info"> {{ 'PUSH_MODAL.RECIPIENT' | translate }}: {{ recipientName() }}</p>
+
+      <div class="form-group">
+        <label for="pushMessage">{{ 'PUSH_MODAL.MESSAGE' | translate }}:</label>
+        <textarea
+          id="pushMessage"
+          [ngModel]="message()"
+          (ngModelChange)="message.set($event)"
+          placeholder="{{ 'PUSH_MODAL.MESSAGE_PLACEHOLDER' | translate }}"
+          rows="4"
+          class="message-input"
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer">
       <button type="button" class="btn btn-secondary" (click)="close()">
         {{ 'APP.CANCEL' | translate }}
-    </button>
-    <button
-      type="button"
-      class="btn btn-primary"
-      (click)="send()"
-      [disabled]="!message().trim()"
-    >
-      {{ 'APP.SEND' | translate }}
-    </button>
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="send()"
+        [disabled]="!message().trim()"
+      >
+        {{ 'APP.SEND' | translate }}
+      </button>
+    </div>
   </div>
 </div>

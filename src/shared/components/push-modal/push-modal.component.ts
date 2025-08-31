@@ -1,4 +1,13 @@
-import { Component, input, InputSignal, output, OutputEmitterRef, signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  ElementRef, HostListener,
+  input,
+  InputSignal,
+  output,
+  OutputEmitterRef,
+  signal,
+  WritableSignal
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
