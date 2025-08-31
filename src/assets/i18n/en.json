@@ -39,7 +39,7 @@
       "FEMALE": "Female"
     },
     "CAR_NUMBER_LABEL": "Car number",
-    "CAR_NUMBER_PLACEHOLDER": "A123BC77",
+    "CAR_NUMBER_PLACEHOLDER": "A123BB77",
     "TEMPLATE_LABEL": "Template",
     "TEMPLATE_PLACEHOLDER": "Test",
     "DISCOUNT_LABEL": "Discount (%)",
@@ -123,7 +123,7 @@
       "FEMALE": "Female"
     },
     "CAR_NUMBER_LABEL": "Car number",
-    "CAR_NUMBER_PLACEHOLDER": "A123BC77",
+    "CAR_NUMBER_PLACEHOLDER": "A123BB77",
     "TEMPLATE_LABEL": "Template *",
     "TEMPLATE_PLACEHOLDER": "Test",
     "DISCOUNT_LABEL": "Discount (%)",

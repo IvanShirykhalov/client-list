@@ -39,7 +39,7 @@
       "FEMALE": "Женский"
     },
     "CAR_NUMBER_LABEL": "Номер автомобиля",
-    "CAR_NUMBER_PLACEHOLDER": "А123БВ77",
+    "CAR_NUMBER_PLACEHOLDER": "А123АА77",
     "TEMPLATE_LABEL": "Шаблон",
     "TEMPLATE_PLACEHOLDER": "Тестовый",
     "DISCOUNT_LABEL": "Скидка (%)",
@@ -123,7 +123,7 @@
       "FEMALE": "Женский"
     },
     "CAR_NUMBER_LABEL": "Номер автомобиля",
-    "CAR_NUMBER_PLACEHOLDER": "А123БВ77",
+    "CAR_NUMBER_PLACEHOLDER": "А123АА77",
     "TEMPLATE_LABEL": "Шаблон *",
     "TEMPLATE_PLACEHOLDER": "Тестовый",
     "DISCOUNT_LABEL": "Скидка (%)",
