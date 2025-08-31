@@ -78,11 +78,20 @@ export class CustomValidators {
 
       const value: string = control.value.toString().toUpperCase();
 
-      // Паттерн: буква + 3 цифры + 2 буквы (А222ВВ)
-      const carNumberRegex: RegExp = /^[АВЕКМНОРСТУХABEKMHOPCTYX]{1}\d{3}[АВЕКМНОРСТУХABEKMHOPCTYX]{2}$/i;
+      // Паттерн: буква + 3 цифры + 2 буквы + 2-3 цифры региона (А222АА77 или А222АА777)
+      const carNumberRegex: RegExp = /^[АВЕКМНОРСТУХABEKMHOPCTYX]{1}\d{3}[АВЕКМНОРСТУХABEKMHOPCTYX]{2}\d{2,3}$/i;
 
       if (!carNumberRegex.test(value)) {
         return { invalidCarNumber: true };
+      }
+
+      // Дополнительная проверка региона (от 1 до 999)
+      const regionPart: RegExpMatchArray | null = value.match(/\d{2,3}$/);
+      if (regionPart) {
+        const region: number = parseInt(regionPart[0], 10);
+        if (region < 1 || region > 999) {
+          return { invalidRegion: true };
+        }
       }
 
       return null;
