@@ -1,5 +1,5 @@
 import {
-  Component,
+  Component, computed,
   DestroyRef,
   inject,
   input,
@@ -11,7 +11,15 @@ import {
   WritableSignal
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -20,6 +28,7 @@ import { Observable } from 'rxjs';
 import { CustomInputComponent } from '../../../../shared';
 import { ClientsRepository } from '../../data';
 import { ClientDetailsMode, IClient } from '../../core';
+import { CustomValidators } from '../../../../shared/validators';
 
 /**
  * Описывает форму клиента
@@ -165,6 +174,67 @@ export class ClientDetailsComponent implements OnInit {
     this.activeTab.set(tab);
   }
 
+  /**
+   * Получение сообщения об ошибке для поля
+   */
+  public getErrorMessage(controlName: string): string {
+    const control: AbstractControl<any, any> | null = this.clientForm.get(controlName);
+    if (!control || !control.touched || !control.errors) {
+      return '';
+    }
+
+    const errors: ValidationErrors = control.errors;
+
+    switch (controlName) {
+      case 'fio':
+        if (errors['required']) return this.translate.instant('VALIDATION.FIO_REQUIRED');
+        if (errors['maxlength']) return this.translate.instant('VALIDATION.MAX_LENGTH', { max: 100 });
+        if (errors['pattern']) return this.translate.instant('VALIDATION.FIO_PATTERN');
+        break;
+
+      case 'phone':
+        if (errors['invalidPhoneFormat']) return this.translate.instant('VALIDATION.PHONE_FORMAT');
+        if (errors['insufficientDigits']) return this.translate.instant('VALIDATION.PHONE_MIN_DIGITS');
+        if (errors['excessiveDigits']) return this.translate.instant('VALIDATION.PHONE_MAX_DIGITS');
+        break;
+
+      case 'email':
+        if (errors['invalidEmail']) return this.translate.instant('VALIDATION.EMAIL_FORMAT');
+        break;
+
+      case 'city':
+        if (errors['maxlength']) return this.translate.instant('VALIDATION.MAX_LENGTH', { max: 50 });
+        if (errors['pattern']) return this.translate.instant('VALIDATION.CITY_PATTERN');
+        break;
+
+      case 'birthday':
+        if (errors['futureDate']) return this.translate.instant('VALIDATION.FUTURE_DATE');
+        break;
+
+      case 'carNumber':
+        if (errors['invalidCarNumber']) return this.translate.instant('VALIDATION.CAR_NUMBER_FORMAT');
+        if (errors['maxlength']) return this.translate.instant('VALIDATION.MAX_LENGTH', { max: 6 });
+        break;
+
+      case 'discount':
+      case 'bonus':
+        if (errors['min']) return this.translate.instant('VALIDATION.MIN_VALUE', { min: 0 });
+        if (errors['max']) return this.translate.instant('VALIDATION.MAX_VALUE', { max: 100 });
+        if (errors['pattern']) return this.translate.instant('VALIDATION.NUMERIC_ONLY');
+        break;
+    }
+
+    return this.translate.instant('VALIDATION.INVALID_FIELD');
+  }
+
+  /**
+   * Проверка, есть ли ошибки у поля
+   */
+  public hasError(controlName: string): boolean {
+    const control: AbstractControl<any, any> | null = this.clientForm.get(controlName);
+    return !!control && control.touched && control.invalid;
+  }
+
 
   /**
    * Получение заголовка модального окна
@@ -193,21 +263,21 @@ export class ClientDetailsComponent implements OnInit {
     const formValue: ClientFormValue = this.clientForm.value;
     return {
       fio: formValue.fio,
-      phone: formValue.phone || undefined,
-      email: formValue.email || undefined,
-      city: formValue.city || undefined,
-      birthday: formValue.birthday || undefined,
-      gender: formValue.gender || undefined,
-      car_number: formValue.carNumber || undefined,
-      discount: formValue.discount || undefined,
-      bonus: formValue.bonus || undefined,
-      loyalty_level: formValue.loyaltyLevel || undefined,
+      phone: formValue.phone,
+      email: formValue.email,
+      city: formValue.city,
+      birthday: formValue.birthday,
+      gender: formValue.gender,
+      car_number: formValue.carNumber,
+      discount: formValue.discount,
+      bonus: formValue.bonus,
+      loyalty_level: formValue.loyaltyLevel,
       template: formValue.template,
-      barcode: formValue.barcode || undefined,
-      key3: formValue.key3 || undefined,
-      key4: formValue.key4 || undefined,
-      key5: formValue.key5 || undefined,
-      key6: formValue.key6 || undefined,
+      barcode: formValue.barcode,
+      key3: formValue.key3,
+      key4: formValue.key4,
+      key5: formValue.key5,
+      key6: formValue.key6,
     };
   }
 
@@ -251,23 +321,65 @@ export class ClientDetailsComponent implements OnInit {
    */
   private initForm(): void {
     this.clientForm = this.formBuilder.group({
-      fio: ['', [Validators.required, Validators.maxLength(100)]],
-      phone: ['', [Validators.pattern(/^[+]?[0-9]{10,15}$/)]],
-      email: ['', [Validators.email]],
-      city: ['', [Validators.maxLength(50)]],
-      birthday: [''],
+      fio: ['', [
+        Validators.required,
+        Validators.maxLength(100),
+        Validators.pattern(/^[a-zA-Zа-яА-ЯёЁ\s-]+$/)
+      ]],
+      phone: ['', [
+        CustomValidators.phoneNumber()
+      ]],
+      email: ['', [
+        CustomValidators.email()
+      ]],
+      city: ['', [
+        Validators.maxLength(50),
+        Validators.pattern(/^[a-zA-Zа-яА-ЯёЁ\s-]+$/)
+      ]],
+      birthday: ['', [
+        CustomValidators.pastDate()
+      ]],
       gender: [''],
-      carNumber: ['', [Validators.maxLength(20)]],
+      carNumber: ['', [
+        Validators.maxLength(20),
+        CustomValidators.carNumber()
+      ]],
       template: [{ value: 'Тестовый', disabled: true }, [Validators.required]],
-      discount: ['', [Validators.min(0), Validators.max(100)]],
-      bonus: ['', [Validators.min(0)]],
-      loyaltyLevel: ['', [Validators.maxLength(50)]],
-      barcode: ['', [Validators.maxLength(100)]],
-      key3: ['', [Validators.maxLength(100)]],
-      key4: ['', [Validators.maxLength(100)]],
-      key5: ['', [Validators.maxLength(100)]],
-      key6: ['', [Validators.maxLength(100)]]
+      discount: ['', [
+        Validators.min(0),
+        Validators.max(100),
+        Validators.pattern(/^\d+$/)
+      ]],
+      bonus: ['', [
+        Validators.min(0),
+        Validators.pattern(/^\d+$/)
+      ]],
+      loyaltyLevel: ['', [
+        Validators.maxLength(50)
+      ]],
+      barcode: ['', [
+        Validators.maxLength(100)
+      ]],
+      key3: ['', [
+        Validators.maxLength(100)
+      ]],
+      key4: ['', [
+        Validators.maxLength(100)
+      ]],
+      key5: ['', [
+        Validators.maxLength(100)
+      ]],
+      key6: ['', [
+        Validators.maxLength(100)
+      ]]
     });
+
+    // Подписка на изменения статуса валидации
+    this.clientForm.statusChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.errorMessage.set('');
+      });
   }
 
   /**

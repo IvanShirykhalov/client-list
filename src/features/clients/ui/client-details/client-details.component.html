@@ -50,153 +50,251 @@
         @if (activeTab() === 'basic') {
           <div class="tab-content">
             <div class="form-row">
-              <app-custom-input
-                formControlName="fio"
-                [label]="'CLIENT_DETAILS.FIO_LABEL' | translate"
-                type="text"
-                [required]="true"
-                [disabled]="loading()"
-                [placeholder]="'CLIENT_DETAILS.FIO_PLACEHOLDER' | translate">
-              </app-custom-input>
+              <div class="field-container">
+                <app-custom-input
+                  formControlName="fio"
+                  [label]="'CLIENT_DETAILS.FIO_LABEL' | translate"
+                  type="text"
+                  [required]="true"
+                  [disabled]="loading()"
+                  [placeholder]="'CLIENT_DETAILS.FIO_PLACEHOLDER' | translate"
+                  [class.invalid]="hasError('fio')">
+                </app-custom-input>
+                @if (hasError('fio')) {
+                  <div class="error-text">{{ getErrorMessage('fio') }}</div>
+                }
+              </div>
 
-              <app-custom-input
-                formControlName="phone"
-                [label]="'CLIENT_DETAILS.PHONE_LABEL' | translate"
-                type="tel"
-                [disabled]="loading()"
-                [placeholder]="'CLIENT_DETAILS.PHONE_PLACEHOLDER' | translate">
-              </app-custom-input>
-            </div>
-
-            <div class="form-row">
-              <app-custom-input
-                formControlName="email"
-                [label]="'CLIENT_DETAILS.EMAIL_LABEL' | translate"
-                type="email"
-                [disabled]="loading()"
-                [placeholder]="'CLIENT_DETAILS.EMAIL_PLACEHOLDER' | translate">
-              </app-custom-input>
-
-              <app-custom-input
-                formControlName="city"
-                [label]="'CLIENT_DETAILS.CITY_LABEL' | translate"
-                type="text"
-                [disabled]="loading()"
-                [placeholder]="'CLIENT_DETAILS.CITY_PLACEHOLDER' | translate">
-              </app-custom-input>
-            </div>
-
-            <div class="form-row">
-              <app-custom-input
-                formControlName="birthday"
-                [label]="'CLIENT_DETAILS.BIRTHDAY_LABEL' | translate"
-                type="date"
-                [disabled]="loading()">
-              </app-custom-input>
-
-              <div class="form-group">
-                <label>{{ 'CLIENT_DETAILS.GENDER.LABEL' | translate }}</label>
-                <select
-                  formControlName="gender"
-                  class="form-control"
-                  [disabled]="loading()">
-                  <option value="">{{ 'CLIENT_DETAILS.GENDER.NOT_SPECIFIED' | translate }}</option>
-                  <option value="male">{{ 'CLIENT_DETAILS.GENDER.MALE' | translate }}</option>
-                  <option value="female">{{ 'CLIENT_DETAILS.GENDER.FEMALE' | translate }}</option>
-                </select>
+              <div class="field-container">
+                <app-custom-input
+                  formControlName="phone"
+                  [label]="'CLIENT_DETAILS.PHONE_LABEL' | translate"
+                  type="tel"
+                  [disabled]="loading()"
+                  [placeholder]="'CLIENT_DETAILS.PHONE_PLACEHOLDER' | translate"
+                  [class.invalid]="hasError('phone')">
+                </app-custom-input>
+                @if (hasError('phone')) {
+                  <div class="error-text">{{ getErrorMessage('phone') }}</div>
+                }
               </div>
             </div>
 
             <div class="form-row">
-              <app-custom-input
-                formControlName="carNumber"
-                [label]="'CLIENT_DETAILS.CAR_NUMBER_LABEL' | translate"
-                type="text"
-                [disabled]="loading()"
-                [placeholder]="'CLIENT_DETAILS.CAR_NUMBER_PLACEHOLDER' | translate">
-              </app-custom-input>
+              <div class="field-container">
+                <app-custom-input
+                  formControlName="email"
+                  [label]="'CLIENT_DETAILS.EMAIL_LABEL' | translate"
+                  type="email"
+                  [disabled]="loading()"
+                  [placeholder]="'CLIENT_DETAILS.EMAIL_PLACEHOLDER' | translate"
+                  [class.invalid]="hasError('email')">
+                </app-custom-input>
+                @if (hasError('email')) {
+                  <div class="error-text">{{ getErrorMessage('email') }}</div>
+                }
+              </div>
 
-              <app-custom-input
-                formControlName="template"
-                [label]="'CLIENT_DETAILS.TEMPLATE_LABEL' | translate"
-                type="text"
-                [placeholder]="'CLIENT_DETAILS.TEMPLATE_PLACEHOLDER' | translate">
-              </app-custom-input>
+              <div class="field-container">
+                <app-custom-input
+                  formControlName="city"
+                  [label]="'CLIENT_DETAILS.CITY_LABEL' | translate"
+                  type="text"
+                  [disabled]="loading()"
+                  [placeholder]="'CLIENT_DETAILS.CITY_PLACEHOLDER' | translate"
+                  [class.invalid]="hasError('city')">
+                </app-custom-input>
+                @if (hasError('city')) {
+                  <div class="error-text">{{ getErrorMessage('city') }}</div>
+                }
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field-container">
+                <app-custom-input
+                  formControlName="birthday"
+                  [label]="'CLIENT_DETAILS.BIRTHDAY_LABEL' | translate"
+                  type="date"
+                  [disabled]="loading()"
+                  [class.invalid]="hasError('birthday')">
+                </app-custom-input>
+                @if (hasError('birthday')) {
+                  <div class="error-text">{{ getErrorMessage('birthday') }}</div>
+                }
+              </div>
+
+              <div class="field-container">
+                <label class="field-label">{{ 'CLIENT_DETAILS.GENDER.LABEL' | translate }}</label>
+                <select
+                  formControlName="gender"
+                  class="form-control"
+                  [disabled]="loading()"
+                  [class.invalid]="hasError('gender')">
+                  <option value="">{{ 'CLIENT_DETAILS.GENDER.NOT_SPECIFIED' | translate }}</option>
+                  <option value="male">{{ 'CLIENT_DETAILS.GENDER.MALE' | translate }}</option>
+                  <option value="female">{{ 'CLIENT_DETAILS.GENDER.FEMALE' | translate }}</option>
+                </select>
+                @if (hasError('gender')) {
+                  <div class="error-text">{{ getErrorMessage('gender') }}</div>
+                }
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field-container">
+                <app-custom-input
+                  formControlName="carNumber"
+                  [label]="'CLIENT_DETAILS.CAR_NUMBER_LABEL' | translate"
+                  type="text"
+                  [disabled]="loading()"
+                  [placeholder]="'CLIENT_DETAILS.CAR_NUMBER_PLACEHOLDER' | translate"
+                  [class.invalid]="hasError('carNumber')">
+                </app-custom-input>
+                @if (hasError('carNumber')) {
+                  <div class="error-text">{{ getErrorMessage('carNumber') }}</div>
+                }
+                @if (!hasError('carNumber') && clientForm.get('carNumber')?.value) {
+                  <div class="hint-text">
+                    {{ 'VALIDATION.CAR_NUMBER_ALLOWED_LETTERS' | translate }}
+                  </div>
+                }
+              </div>
+
+              <div class="field-container">
+                <app-custom-input
+                  formControlName="template"
+                  [label]="'CLIENT_DETAILS.TEMPLATE_LABEL' | translate"
+                  type="text"
+                  [placeholder]="'CLIENT_DETAILS.TEMPLATE_PLACEHOLDER' | translate"
+                  [class.invalid]="hasError('template')">
+                </app-custom-input>
+                @if (hasError('template')) {
+                  <div class="error-text">{{ getErrorMessage('template') }}</div>
+                }
+              </div>
             </div>
           </div>
         }
+
         @if (activeTab() === 'additional') {
           <div class="tab-content">
             <div class="form-row">
-              <app-custom-input
-                formControlName="discount"
-                [label]="'CLIENT_DETAILS.DISCOUNT_LABEL' | translate"
-                type="number"
-                [disabled]="loading()"
-                [placeholder]="'CLIENT_DETAILS.DISCOUNT_PLACEHOLDER' | translate">
-              </app-custom-input>
+              <div class="field-container">
+                <app-custom-input
+                  formControlName="discount"
+                  [label]="'CLIENT_DETAILS.DISCOUNT_LABEL' | translate"
+                  [disabled]="loading()"
+                  [placeholder]="'CLIENT_DETAILS.DISCOUNT_PLACEHOLDER' | translate"
+                  [class.invalid]="hasError('discount')">
+                </app-custom-input>
+                @if (hasError('discount')) {
+                  <div class="error-text">{{ getErrorMessage('discount') }}</div>
+                }
+              </div>
 
-              <app-custom-input
-                formControlName="bonus"
-                [label]="'CLIENT_DETAILS.BONUS_LABEL' | translate"
-                type="number"
-                [disabled]="loading()"
-                [placeholder]="'CLIENT_DETAILS.BONUS_PLACEHOLDER' | translate">
-              </app-custom-input>
+              <div class="field-container">
+                <app-custom-input
+                  formControlName="bonus"
+                  [label]="'CLIENT_DETAILS.BONUS_LABEL' | translate"
+                  [disabled]="loading()"
+                  [placeholder]="'CLIENT_DETAILS.BONUS_PLACEHOLDER' | translate"
+                  [class.invalid]="hasError('bonus')">
+                </app-custom-input>
+                @if (hasError('bonus')) {
+                  <div class="error-text">{{ getErrorMessage('bonus') }}</div>
+                }
+              </div>
             </div>
 
             <div class="form-row">
-              <app-custom-input
-                formControlName="loyaltyLevel"
-                [label]="'CLIENT_DETAILS.LOYALTY_LEVEL_LABEL' | translate"
-                type="text"
-                [disabled]="loading()"
-                [placeholder]="'CLIENT_DETAILS.LOYALTY_LEVEL_PLACEHOLDER' | translate">
-              </app-custom-input>
+              <div class="field-container">
+                <app-custom-input
+                  formControlName="loyaltyLevel"
+                  [label]="'CLIENT_DETAILS.LOYALTY_LEVEL_LABEL' | translate"
+                  type="text"
+                  [disabled]="loading()"
+                  [placeholder]="'CLIENT_DETAILS.LOYALTY_LEVEL_PLACEHOLDER' | translate"
+                  [class.invalid]="hasError('loyaltyLevel')">
+                </app-custom-input>
+                @if (hasError('loyaltyLevel')) {
+                  <div class="error-text">{{ getErrorMessage('loyaltyLevel') }}</div>
+                }
+              </div>
 
-              <app-custom-input
-                formControlName="barcode"
-                [label]="'CLIENT_DETAILS.BARCODE_LABEL' | translate"
-                type="text"
-                [disabled]="loading()"
-                [placeholder]="'CLIENT_DETAILS.BARCODE_PLACEHOLDER' | translate">
-              </app-custom-input>
+              <div class="field-container">
+                <app-custom-input
+                  formControlName="barcode"
+                  [label]="'CLIENT_DETAILS.BARCODE_LABEL' | translate"
+                  type="text"
+                  [disabled]="loading()"
+                  [placeholder]="'CLIENT_DETAILS.BARCODE_PLACEHOLDER' | translate"
+                  [class.invalid]="hasError('barcode')">
+                </app-custom-input>
+                @if (hasError('barcode')) {
+                  <div class="error-text">{{ getErrorMessage('barcode') }}</div>
+                }
+              </div>
             </div>
 
             <div class="form-row">
-              <app-custom-input
-                formControlName="key3"
-                [label]="'CLIENT_DETAILS.KEY3_LABEL' | translate"
-                type="text"
-                [disabled]="loading()"
-                [placeholder]="'CLIENT_DETAILS.KEY3_PLACEHOLDER' | translate">
-              </app-custom-input>
+              <div class="field-container">
+                <app-custom-input
+                  formControlName="key3"
+                  [label]="'CLIENT_DETAILS.KEY3_LABEL' | translate"
+                  type="text"
+                  [disabled]="loading()"
+                  [placeholder]="'CLIENT_DETAILS.KEY3_PLACEHOLDER' | translate"
+                  [class.invalid]="hasError('key3')">
+                </app-custom-input>
+                @if (hasError('key3')) {
+                  <div class="error-text">{{ getErrorMessage('key3') }}</div>
+                }
+              </div>
 
-              <app-custom-input
-                formControlName="key4"
-                [label]="'CLIENT_DETAILS.KEY4_LABEL' | translate"
-                type="text"
-                [disabled]="loading()"
-                [placeholder]="'CLIENT_DETAILS.KEY4_PLACEHOLDER' | translate">
-              </app-custom-input>
+              <div class="field-container">
+                <app-custom-input
+                  formControlName="key4"
+                  [label]="'CLIENT_DETAILS.KEY4_LABEL' | translate"
+                  type="text"
+                  [disabled]="loading()"
+                  [placeholder]="'CLIENT_DETAILS.KEY4_PLACEHOLDER' | translate"
+                  [class.invalid]="hasError('key4')">
+                </app-custom-input>
+                @if (hasError('key4')) {
+                  <div class="error-text">{{ getErrorMessage('key4') }}</div>
+                }
+              </div>
             </div>
 
             <div class="form-row">
-              <app-custom-input
-                formControlName="key5"
-                [label]="'CLIENT_DETAILS.KEY5_LABEL' | translate"
-                type="text"
-                [disabled]="loading()"
-                [placeholder]="'CLIENT_DETAILS.KEY5_PLACEHOLDER' | translate">
-              </app-custom-input>
+              <div class="field-container">
+                <app-custom-input
+                  formControlName="key5"
+                  [label]="'CLIENT_DETAILS.KEY5_LABEL' | translate"
+                  type="text"
+                  [disabled]="loading()"
+                  [placeholder]="'CLIENT_DETAILS.KEY5_PLACEHOLDER' | translate"
+                  [class.invalid]="hasError('key5')">
+                </app-custom-input>
+                @if (hasError('key5')) {
+                  <div class="error-text">{{ getErrorMessage('key5') }}</div>
+                }
+              </div>
 
-              <app-custom-input
-                formControlName="key6"
-                [label]="'CLIENT_DETAILS.KEY6_LABEL' | translate"
-                type="text"
-                [disabled]="loading()"
-                [placeholder]="'CLIENT_DETAILS.KEY6_PLACEHOLDER' | translate">
-              </app-custom-input>
+              <div class="field-container">
+                <app-custom-input
+                  formControlName="key6"
+                  [label]="'CLIENT_DETAILS.KEY6_LABEL' | translate"
+                  type="text"
+                  [disabled]="loading()"
+                  [placeholder]="'CLIENT_DETAILS.KEY6_PLACEHOLDER' | translate"
+                  [class.invalid]="hasError('key6')">
+                </app-custom-input>
+                @if (hasError('key6')) {
+                  <div class="error-text">{{ getErrorMessage('key6') }}</div>
+                }
+              </div>
             </div>
           </div>
         }
