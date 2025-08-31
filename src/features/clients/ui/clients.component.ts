@@ -4,19 +4,17 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import {
-  IClient,
-  ClientDetailsMode,
   EmptyCellDirective,
   PushModalComponent,
   TableSortDirectionType,
   TableSortingComponent,
 } from '../../../shared';
-import { ClientsFacade } from '../core';
+import { ClientDetailsMode, ClientsFacade, IClient } from '../core';
 import { ClientDetailsComponent } from './client-details';
 import { NotificationService } from '../../../shared/services/notification.service';
-import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Компонент со списком клиентов

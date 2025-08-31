@@ -12,13 +12,36 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
-import { ClientDetailsMode, CustomInputComponent, IClient } from '../../../../shared';
+import { CustomInputComponent } from '../../../../shared';
 import { ClientsRepository } from '../../data';
-import { HttpErrorResponse } from '@angular/common/http';
+import { ClientDetailsMode, IClient } from '../../core';
+
+/**
+ * Описывает форму клиента
+ */
+interface ClientFormValue {
+  fio: string;
+  phone: string;
+  email: string;
+  city: string;
+  birthday: string;
+  gender: string;
+  carNumber: string;
+  template: string;
+  discount: string;
+  bonus: string;
+  loyaltyLevel: string;
+  barcode: string;
+  key3: string;
+  key4: string;
+  key5: string;
+  key6: string;
+}
 
 /**
  * Компонент для создания и редактирования клиента
@@ -167,7 +190,7 @@ export class ClientDetailsComponent implements OnInit {
    * Подготовка данных для отправки
    */
   private prepareClientData(): Partial<IClient> {
-    const formValue = this.clientForm.value;
+    const formValue: ClientFormValue = this.clientForm.value;
     return {
       fio: formValue.fio,
       phone: formValue.phone || undefined,

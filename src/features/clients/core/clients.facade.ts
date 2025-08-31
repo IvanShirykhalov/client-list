@@ -4,8 +4,9 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, tap, catchError, of } from 'rxjs';
 
-import { IClient, ClientDetailsMode, IClientsResponse, TableSortDirectionType } from '../../../shared';
+import { TableSortDirectionType } from '../../../shared';
 import { ClientsRepository } from '../data';
+import { ClientDetailsMode, IClient, IClientsResponse } from './constants';
 
 /**
  * Фасад таблицы клиентов
@@ -244,7 +245,7 @@ export class ClientsFacade {
    *
    * @param message - сообщение в пуше
    */
-  public sendPush(message: string): Observable<any> {
+  public sendPush(message: string): Observable<{ success: boolean; message?: string }> {
     if (!message.trim()) {
       throw new Error(this.translate.instant('ERRORS.EMPTY_MESSAGE'));
     }

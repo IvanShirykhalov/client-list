@@ -99,6 +99,7 @@
             "variableDeclarationIgnoreFunction": true
           }
         ],
+        "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/type-annotation-spacing": "error",
         "@typescript-eslint/no-inferrable-types": "off",
         "object-curly-spacing": [

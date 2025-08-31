@@ -3,7 +3,8 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular
 import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { AuthService, IClient, IClientsResponse } from '../../../shared';
+import { AuthService } from '../../../shared';
+import { IClient, IClientsResponse } from '../core';
 
 /**
  * Репозиторий клиентов
